@@ -25,16 +25,16 @@ function use_screen () {
 		return
 	fi
 
-	local use_screen=yes
+	local in_screen=no
 
 	case "$TERM" in
 		screen*)
-			use_screen=no
+			in_screen=yes
 			PROMPT_COMMAND="prompt_command_screen;$PROMPT_COMMAND"
 			;;
 	esac
 
-	if [ "$use_screen" = yes ]; then
+	if [ "$in_screen" = no ]; then
 		load_screen
 	fi
 }
