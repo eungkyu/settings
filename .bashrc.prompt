@@ -1,0 +1,240 @@
+# ~/.bash_prompt: sourced by .bashrc for setting bash prompt
+
+shopt -s checkwinsize
+
+function reduce_word() {
+	local word="$1"
+	local suffix="${1:1}"
+	local res="${1:0:1}"
+
+	local oldifs="$IFS"
+	IFS=aeiou
+	for s in $suffix; do
+		if [ -n "$s" ]; then
+			res="$res$s"
+		fi
+	done
+	IFS="$oldifs"
+
+	if [ ${#res} -lt ${#suffix} ]; then
+		echo -n "$res~"
+	else
+		echo -n "$word"
+	fi
+}
+
+function cut_word() {
+	local word="$1"
+	local res="${1:0:1}~"
+
+	if [ ${#res} -lt ${#word} ]; then
+		echo -n "$res"
+	else
+		echo -n "$word"
+	fi
+}
+
+function reduce_path() {
+	local path=$1
+	local reduce_len=$2
+	local res=""
+
+	local oldifs="$IFS"
+	IFS=/
+	for name in $path; do
+		if [ $reduce_len -gt 0 ]; then
+			short_name="$(reduce_word "$name")"
+			res="$res$short_name/"
+			reduce_len=$(( $reduce_len - ( ${#name} - ${#short_name} ) ))
+		else
+			res="$res$name/"
+		fi
+	done
+	IFS="$oldifs"
+
+	echo -n "${res%/}"
+}
+
+function cut_word() {
+	local word="$1"
+	local res="${1:0:1}~"
+
+	if [ ${#res} -lt ${#word} ]; then
+		echo -n "$res"
+	else
+		echo -n "$word"
+	fi
+}
+
+function cut_path() {
+	local path=$1
+	local reduce_len=$2
+	local res=""
+
+	local oldifs="$IFS"
+	IFS=/
+	for name in $path; do
+		if [ $reduce_len -gt 0 ]; then
+			short_name="$(cut_word "$name")"
+			res="$res$short_name/"
+			reduce_len=$(( $reduce_len - ( ${#name} - ${#short_name} ) ))
+		else
+			res="$res$name/"
+		fi
+	done
+	IFS="$oldifs"
+
+	echo -n "${res%/}"
+}
+
+function make_dash_long() {
+	DASH_LONG="--------------------------------"
+	if [ "$USE_TW" = yes ]; then
+		local dash_long_len=$(echo -n "$DASH_LONG" | tw)
+	else
+		local dash_long_len="${#DASH_LONG}"
+	fi
+	while [ "$dash_long_len" -lt "$TERMWIDTH" ]; do
+		DASH_LONG="$DASH_LONG$DASH_LONG"
+		dash_long_len=$(( $dash_long_len + $dash_long_len ))
+	done
+}
+
+function make_prompt_init() {
+	if type tw > /dev/null 2> /dev/null; then
+		USE_TW=yes
+	else
+		USE_TW=no
+	fi
+	local b_ansi="\[\033["
+	local e_ansi="\]"
+
+	C_USERHOST="${b_ansi}0;32m${e_ansi}"
+	C_DATE="${b_ansi}0;36m${e_ansi}"
+	C_DIR="${b_ansi}0;33m${e_ansi}"
+	C_BG="${b_ansi}30;1m${e_ansi}"
+	C_END="${b_ansi}0;0m${e_ansi}"
+
+	if [ -z "$COLUMNS" ]; then
+		TERMWIDTH=$(tput cols)
+	else
+		TERMWIDTH="$COLUMNS"
+	fi
+	make_dash_long
+
+	HOST_FULL=$(hostname -s)
+	local userhost_test="$USER@$HOST_FULL"
+	if [ "$USE_TW" = yes ]; then
+		USERHOST_FULL_LEN=$(echo -n "$userhost_test" | tw)
+	else
+		USERHOST_FULL_LEN=${#userhost_test}
+	fi
+
+	local date_test="$(date "+%T %a")"
+	if [ "$USE_TW" = yes ]; then
+		DATE_LEN=$(echo -n "$date_test" | tw)
+	else
+		DATE_LEN=${#date_test}
+	fi
+
+	case $TERM in
+	xterm*|screen|cygwin)
+		PROMPT_COMMAND="make_prompt;$PROMPT_COMMAND"
+		;;
+	*)
+		PROMPT_COMMAND="make_prompt_without_xterm;$PROMPT_COMMAND"
+		;;
+	esac
+}
+
+function make_prompt () {
+    echo -ne "\033]0;$USER@$HOST_FULL: ${PWD/$HOME/~} - bash\007"
+    make_prompt_without_xterm
+}
+
+function make_prompt_without_xterm () {
+	if [ -z "$COLUMNS" ]; then
+		local termwidth=$(tput cols)
+	else
+		local termwidth="$COLUMNS"
+	fi
+	if [ "$termwidth" -ne "$TERMWIDTH" ]; then
+		TERMWIDTH="$termwidth"
+		make_dash_long
+	fi
+
+    local dir="${PWD/$HOME/~}"
+	if [ "$USE_TW" = yes ]; then
+		local dir_len=$(echo -n "$dir" | tw)
+	else
+		local dir_len=${#dir}
+	fi
+
+	local deco_len=6
+	if [ "$USE_TW" = yes ]; then
+		local wc_margin=0
+	else
+		local wc_margin=2
+	fi
+
+	local userhost="\u@\h"
+	local prompt_len=$(( $USERHOST_FULL_LEN + $dir_len + $DATE_LEN + $deco_len + $wc_margin ))
+    local dash_len=$(( $TERMWIDTH - $prompt_len ))
+
+    if [ $dash_len -le 0 ]; then
+    	local userhost="$(reduce_word "$USER")@$(reduce_word "$HOST_FULL")"
+    	if [ "$USE_TW" = yes ]; then
+    		local userhost_len=$(echo -n "$userhost" | tw)
+    	else
+    		local userhost_len=${#userhost}
+    	fi
+		prompt_len=$(( $userhost_len + $dir_len + $DATE_LEN + $deco_len + $wc_margin ))
+		dash_len=$(( $TERMWIDTH - $prompt_len ))
+    fi
+
+    if [ $dash_len -le 0 ]; then
+    	local userhost="$(cut_word "$USER")@$(cut_word "$HOST_FULL")"
+    	if [ "$USE_TW" = yes ]; then
+    		local userhost_len=$(echo -n "$userhost" | tw)
+    	else
+    		local userhost_len=${#userhost}
+    	fi
+		prompt_len=$(( $userhost_len + $dir_len + $DATE_LEN + $deco_len + $wc_margin ))
+		dash_len=$(( $TERMWIDTH - $prompt_len ))
+    fi
+
+    if [ $dash_len -le 0 ]; then
+    	local reduce_len=$(( -$dash_len + 1 ))
+    	dir=$(reduce_path "$dir" $reduce_len)
+    	if [ "$USE_TW" = yes ]; then
+    		local dir_len=$(echo -n "$dir" | tw)
+    	else
+    		local dir_len=${#dir}
+    	fi
+		prompt_len=$(( $userhost_len + $dir_len + $DATE_LEN + $deco_len + $wc_margin ))
+		dash_len=$(( $TERMWIDTH - $prompt_len ))
+    fi
+
+    if [ $dash_len -le 0 ]; then
+    	local reduce_len=$(( -$dash_len + 1 ))
+    	dir=$(cut_path "$dir" $reduce_len)
+    	if [ "$USE_TW" = yes ]; then
+    		local dir_len=$(echo -n "$dir" | tw)
+    	else
+    		local dir_len=${#dir}
+    	fi
+		prompt_len=$(( $userhost_len + $dir_len + $DATE_LEN + $deco_len + $wc_margin ))
+		dash_len=$(( $TERMWIDTH - $prompt_len ))
+    fi
+
+    if [ $dash_len -le 0 ]; then
+        dir="...${dir:$(( 4 - ${dash_len} ))}"
+        dash_len=1
+    fi
+
+    local dash="${DASH_LONG:0:$dash_len}"
+
+    PS1="$C_BG<$C_USERHOST$userhost$C_BG: $C_DIR$dir$C_BG>$dash<$C_DATE\D{%T %a}$C_BG>$C_END\n\\$ "
+}
+
+make_prompt_init

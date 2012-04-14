@@ -1,0 +1,42 @@
+# interactive shell인 경우에만 진행
+[ "$PS1" ] || return
+
+# use screen
+if [ -e ~/.bashrc.screen ]; then
+	source ~/.bashrc.screen
+fi
+
+# git auto-completion
+if [ -e /etc/bash_completion.d/git ]; then
+	source /etc/bash_completion.d/git
+fi
+
+# check the terminal size when bash regains control
+shopt -s checkwinsize
+
+# user mask
+umask 022
+
+# user limit
+ulimit -c 0
+
+# default programs
+export VISUAL=vim
+export EDITOR=$VISUAL
+export GREP_OPTIONS='--color=auto --exclude=cscope.*'
+
+alias rm='rm -i'
+alias mv='mv -i'
+alias cp='cp -i'
+case "$(uname -s)" in
+	FreeBSD | Darwin	) alias ls='ls -vG' ;;
+	Linux | CYGWIN*		) alias ls='ls -N --color=auto' ;;
+esac
+alias grep='grep --color=auto'
+alias less='less -r'
+alias vi='vim'
+alias g='git'
+
+if [ -e ~/.bashrc.prompt ]; then
+	source ~/.bashrc.prompt
+fi

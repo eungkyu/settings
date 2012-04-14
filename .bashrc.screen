@@ -1,0 +1,42 @@
+function load_screen () {
+	local screen_env="SSH_AUTH_SOCK SSH_CLIENT SSH_CONNECTION SSH_TTY XAUTHORITY DISPLAY"
+	for env in $screen_env; do
+		if [ -n "${!env}" ]; then
+			screen -x -R -X setenv $env "${!env}" > /dev/null
+		fi
+	done
+
+	for env in $screen_env; do
+		if [ -n "${!env}" ]; then
+			echo "export $env=\"${!env}\""
+		fi
+	done > .screen_env
+	exec screen -x -R
+}
+
+function prompt_command_screen () {
+	if [ -f ~/.screen_env ]; then
+		source ~/.screen_env
+	fi
+}
+
+function use_screen () {
+	if ! which screen >/dev/null; then
+		return
+	fi
+
+	local use_screen=yes
+
+	case "$TERM" in
+		screen*)
+			use_screen=no
+			PROMPT_COMMAND="prompt_command_screen;$PROMPT_COMMAND"
+			;;
+	esac
+
+	if [ "$use_screen" = yes ]; then
+		load_screen
+	fi
+}
+
+use_screen
