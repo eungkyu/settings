@@ -6,7 +6,8 @@
 ## @SINCE		2006-10-10
 ## ===========================================================================
 
-escape ^Bb
+escape ^Cc
+	bind a screen
 # startup message
 	startup_message off
 
