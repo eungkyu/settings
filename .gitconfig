@@ -14,4 +14,4 @@
 [core]
 	pager = less -x5,9
 [branch]
-	autosetuprebase = local
+	autosetuprebase = always
