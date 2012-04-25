@@ -66,7 +66,7 @@ syntax on
 function! ReloadCscope()
 	if exists("g:cscope_find")
 		" 프로젝트에 맞게 g:cscope_find 변수 설정해야 함
-		execute '!cd ' . g:cscope_dir . ' && ' . g:cscope_find . ' > cscope.files && cscope -qkb'
+		execute '!cd ' . g:cscope_dir . ' && ' . g:cscope_find . ' > cscope.files && cscope -b'
 		cscope reset
 	endif
 endfunction
