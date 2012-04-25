@@ -34,6 +34,7 @@ case "$(uname -s)" in
 esac
 alias grep='grep --color=auto'
 alias less='less -r'
+alias vim='vim -p'
 alias vi='vim'
 alias g='git'
 if type git >/dev/null; then
