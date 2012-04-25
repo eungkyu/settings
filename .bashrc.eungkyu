@@ -36,6 +36,9 @@ alias grep='grep --color=auto'
 alias less='less -r'
 alias vi='vim'
 alias g='git'
+if type git >/dev/null; then
+	alias diff='git diff --no-index'
+fi
 
 if [ -e ~/.bashrc.prompt ]; then
 	source ~/.bashrc.prompt
