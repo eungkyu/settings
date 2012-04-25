@@ -40,6 +40,16 @@ if type git >/dev/null; then
 	alias diff='git diff --no-index'
 fi
 
+function sgrep() {
+	if [ $# -eq 0 ]; then
+		grep -rI
+	elif [ $# -eq 1 ]; then
+		grep -rI "$1" *
+	else
+		grep -rI "$@"
+	fi
+}
+
 if [ -e ~/.bashrc.prompt ]; then
 	source ~/.bashrc.prompt
 fi
