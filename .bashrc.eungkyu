@@ -28,26 +28,52 @@ export GREP_OPTIONS='--color=auto --exclude=cscope.*'
 alias rm='rm -i'
 alias mv='mv -i'
 alias cp='cp -i'
+
 case "$(uname -s)" in
 	FreeBSD | Darwin	) alias ls='ls -vG' ;;
 	Linux | CYGWIN*		) alias ls='ls -N --color=auto' ;;
 esac
+
 alias grep='grep --color=auto'
 alias less='less -r'
 alias vim='vim -p'
-alias vi='vim'
 alias g='git'
+alias sgrep='grep-source'
+
 if type git >/dev/null; then
 	alias diff='git diff --no-index'
 fi
 
-function sgrep() {
+function grep-source() {
 	if [ $# -eq 0 ]; then
 		grep -rI
 	elif [ $# -eq 1 ]; then
 		grep -rI "$1" *
 	else
 		grep -rI "$@"
+	fi
+}
+
+alias vi='vi-helper'
+alias cd='cd-helper'
+
+function cd-helper() {
+	if [ $# -eq 0 ]; then
+		\cd
+	elif [ -d "$1" ]; then
+		\cd "$@"
+	else
+		vim -p "$@"
+	fi
+}
+
+function vi-helper() {
+	if [ $# -eq 0 ]; then
+		vim
+	elif [ -d "$1" ]; then
+		\cd "$@"
+	else
+		vim -p "$@"
 	fi
 }
 
