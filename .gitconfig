@@ -6,6 +6,9 @@
 	ci = commit
 	co = checkout
 	br = branch
+	bm = branch --merged
+	bn = branch --no-merged
+	sh = stash
 [color]
 	branch = auto
 	diff = auto
