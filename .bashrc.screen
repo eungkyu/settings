@@ -39,6 +39,6 @@ function use_screen () {
 	fi
 }
 
-if [ ! -n $NO_SCREEN ]; then
+if [ -z "$NO_SCREEN" ]; then
 	use_screen
 fi
