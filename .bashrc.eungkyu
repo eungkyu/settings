@@ -7,8 +7,8 @@ if [ -e ~/.bashrc.screen ]; then
 fi
 
 # load ssh-agent
-if [ -e ~/.bashrc.sshagent ]; then
-	source ~/.bashrc.sshagent
+if [ -e ~/.bashrc.ssh-agent ]; then
+	source ~/.bashrc.ssh-agent
 fi
 
 # git auto-completion
