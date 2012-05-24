@@ -6,6 +6,11 @@ if [ -e ~/.bashrc.screen ]; then
 	source ~/.bashrc.screen
 fi
 
+# load ssh-agent
+if [ -e ~/.bashrc.sshagent ]; then
+	source ~/.bashrc.sshagent
+fi
+
 # git auto-completion
 if [ -e /etc/bash_completion.d/git ]; then
 	source /etc/bash_completion.d/git
