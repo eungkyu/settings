@@ -1,7 +1,7 @@
 function use_ssh_agent () {
 	# ssh-agent 환경 파일 로드
 	if [ -e ~/.ssh-agent.env ]; then
-		source ~/.ssh-agent.env
+		source ~/.ssh-agent.env >/dev/null
 	fi
 
 	# 이미 ssh-agent가 있을 경우 리턴
@@ -10,7 +10,7 @@ function use_ssh_agent () {
 	fi
 
 	ssh-agent > ~/.ssh-agent.env
-	source ~/.ssh-agent.env
+	source ~/.ssh-agent.env >/dev/null
 
 	ssh-add
 }
