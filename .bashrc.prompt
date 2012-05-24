@@ -122,7 +122,11 @@ function make_prompt_init() {
 	fi
 	make_dash_long
 
-	HOST_FULL=$(hostname -s)
+	HOST_FULL=$(hostname -s 2>/dev/null)
+	if [ $? -ne 0 ]; then
+		HOST_FULL=$(hostname 2>/dev/null)
+	fi
+
 	local userhost_test="$USER@$HOST_FULL"
 	if [ "$USE_TW" = yes ]; then
 		USERHOST_FULL_LEN=$(echo -n "$userhost_test" | tw)
