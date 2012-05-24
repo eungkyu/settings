@@ -65,10 +65,10 @@ alias cd='cd-helper'
 function cd-helper() {
 	if [ $# -eq 0 ]; then
 		\cd
-	elif [ -d "$1" ]; then
-		\cd "$@"
-	else
+	elif [ -f "$1" ]; then
 		vim -p "$@"
+	else
+		\cd "$@"
 	fi
 }
 
