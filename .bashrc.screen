@@ -21,7 +21,7 @@ function prompt_command_screen () {
 }
 
 function use_screen () {
-	if ! which screen >/dev/null; then
+	if ! which screen >/dev/null 2>&1; then
 		return
 	fi
 
