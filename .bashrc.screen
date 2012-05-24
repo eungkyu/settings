@@ -2,7 +2,7 @@ function load_screen () {
 	local screen_env="SSH_AUTH_SOCK SSH_CLIENT SSH_CONNECTION SSH_TTY XAUTHORITY DISPLAY"
 	for env in $screen_env; do
 		if [ -n "${!env}" ]; then
-			screen -x -R -X setenv $env "${!env}" > /dev/null
+			screen -A -x -R -X setenv $env "${!env}" > /dev/null
 		fi
 	done
 
@@ -11,7 +11,7 @@ function load_screen () {
 			echo "export $env=\"${!env}\""
 		fi
 	done > .screen_env
-	exec screen -x -R
+	exec screen -A -x -R
 }
 
 function prompt_command_screen () {
