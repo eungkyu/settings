@@ -10,13 +10,13 @@ function load_screen () {
 		if [ -n "${!env}" ]; then
 			echo "export $env=\"${!env}\""
 		fi
-	done > .screen_env
+	done > .screen.env
 	exec screen -A -x -R
 }
 
 function prompt_command_screen () {
-	if [ -f ~/.screen_env ]; then
-		source ~/.screen_env
+	if [ -f ~/.screen.env ]; then
+		source ~/.screen.env
 	fi
 }
 
