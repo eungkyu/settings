@@ -189,7 +189,9 @@ function make_prompt () {
 }
 
 function screen_cmd () {
-	screen -X title "$(get_gitinfo)"
+	if [ -n "$STY" ]; then
+		screen -X title "$(get_gitinfo)"
+	fi
 }
 
 function make_prompt_without_xterm () {
