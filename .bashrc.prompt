@@ -148,7 +148,7 @@ function make_prompt_init() {
 	local e_ansi="\]"
 
 	C_USERHOST="${b_ansi}0;32m${e_ansi}"
-	C_GITINFO1="${b_ansi}0;35m${e_ansi}"
+	C_GITINFO1="${b_ansi}1;35m${e_ansi}"
 	C_GITINFO2="${b_ansi}0;34m${e_ansi}"
 	C_DATE="${b_ansi}0;36m${e_ansi}"
 	C_DIR="${b_ansi}0;33m${e_ansi}"
@@ -171,7 +171,10 @@ function make_prompt_init() {
 	DATE_LEN=$(get_tw "$(date "+%T %a")")
 
 	case $TERM in
-	xterm*|screen|cygwin)
+	screen*)
+		PROMPT_COMMAND="make_prompt;screen_cmd;$PROMPT_COMMAND"
+		;;
+	xterm*|cygwin)
 		PROMPT_COMMAND="make_prompt;$PROMPT_COMMAND"
 		;;
 	*)
@@ -183,6 +186,10 @@ function make_prompt_init() {
 function make_prompt () {
     echo -ne "\033]0;$USER@$HOST_FULL: ${PWD/$HOME/~} - bash\007"
     make_prompt_without_xterm
+}
+
+function screen_cmd () {
+	screen -X title "$(get_gitinfo)"
 }
 
 function make_prompt_without_xterm () {
