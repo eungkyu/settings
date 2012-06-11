@@ -2,6 +2,44 @@
 
 shopt -s checkwinsize
 
+function get_tw() {
+	local str="$1"
+	if [ "$USE_TW" = yes ]; then
+		echo $(echo -n "$str" | tw)
+	else
+		echo ${#str}
+	fi
+}
+
+function init_gitinfo() {
+	GIT_BRANCH=$(git branch --no-color 2> /dev/null | egrep "^\*" | cut -c3-)
+	GIT_ORIGIN=$(basename $(git remote show -n origin | egrep 'Fetch URL' | cut -c14-) .git)
+}
+
+function get_gitinfo() {
+	local option="$1"
+
+	if [ "$option" = -s ]; then
+		echo "$GIT_BRANCH"
+	else
+		if [ -n $GIT_ORIGIN ]; then
+			echo "$GIT_ORIGIN: $GIT_BRANCH"
+		else
+			echo "$GIT_BRANCH"
+		fi
+	fi
+}
+
+function get_gitinfo_str() {
+	if [ -n "$GIT_ORIGIN" ]; then
+		echo "$C_BG-<$C_GITINFO2$GIT_ORIGIN$C_BG: $C_GITINFO1$GIT_BRANCH$C_BG>"
+	elif [ -n "$GIT_BRANCH" ]; then
+		echo "$C_BG-<$C_GITINFO1$GIT_BRANCH$C_BG>"
+	else
+		echo ""
+	fi
+}
+
 function reduce_word() {
 	local word="$1"
 	local suffix="${1:1}"
@@ -110,6 +148,8 @@ function make_prompt_init() {
 	local e_ansi="\]"
 
 	C_USERHOST="${b_ansi}0;32m${e_ansi}"
+	C_GITINFO1="${b_ansi}0;35m${e_ansi}"
+	C_GITINFO2="${b_ansi}0;34m${e_ansi}"
 	C_DATE="${b_ansi}0;36m${e_ansi}"
 	C_DIR="${b_ansi}0;33m${e_ansi}"
 	C_BG="${b_ansi}30;1m${e_ansi}"
@@ -127,19 +167,8 @@ function make_prompt_init() {
 		HOST_FULL=$(hostname 2>/dev/null)
 	fi
 
-	local userhost_test="$USER@$HOST_FULL"
-	if [ "$USE_TW" = yes ]; then
-		USERHOST_FULL_LEN=$(echo -n "$userhost_test" | tw)
-	else
-		USERHOST_FULL_LEN=${#userhost_test}
-	fi
-
-	local date_test="$(date "+%T %a")"
-	if [ "$USE_TW" = yes ]; then
-		DATE_LEN=$(echo -n "$date_test" | tw)
-	else
-		DATE_LEN=${#date_test}
-	fi
+	USERHOST_FULL_LEN=$(get_tw "$USER@$HOST_FULL")
+	DATE_LEN=$(get_tw "$(date "+%T %a")")
 
 	case $TERM in
 	xterm*|screen|cygwin)
@@ -174,7 +203,16 @@ function make_prompt_without_xterm () {
 		local dir_len=${#dir}
 	fi
 
-	local deco_len=6
+	init_gitinfo
+
+	local gitinfo_len=$(get_tw "$(get_gitinfo)")
+
+	if [ $gitinfo_len -gt 0 ]; then
+		local deco_len=9
+	else
+		local deco_len=6
+	fi
+
 	if [ "$USE_TW" = yes ]; then
 		local wc_margin=0
 	else
@@ -182,53 +220,45 @@ function make_prompt_without_xterm () {
 	fi
 
 	local userhost="\u@\h"
-	local prompt_len=$(( $USERHOST_FULL_LEN + $dir_len + $DATE_LEN + $deco_len + $wc_margin ))
-    local dash_len=$(( $TERMWIDTH - $prompt_len ))
+	local userhost_len="$USERHOST_FULL_LEN"
+
+	dash_len_cmd='local dash_len=$(( $TERMWIDTH - $userhost_len - $dir_len - $gitinfo_len - $DATE_LEN - $deco_len - $wc_margin ))'
+	eval $dash_len_cmd
 
     if [ $dash_len -le 0 ]; then
-    	local userhost="$(reduce_word "$USER")@$(reduce_word "$HOST_FULL")"
-    	if [ "$USE_TW" = yes ]; then
-    		local userhost_len=$(echo -n "$userhost" | tw)
-    	else
-    		local userhost_len=${#userhost}
-    	fi
-		prompt_len=$(( $userhost_len + $dir_len + $DATE_LEN + $deco_len + $wc_margin ))
-		dash_len=$(( $TERMWIDTH - $prompt_len ))
+    	userhost="$(reduce_word "$USER")@$(reduce_word "$HOST_FULL")"
+		userhost_len=$(get_tw "$userhost")
+		eval $dash_len_cmd
     fi
 
     if [ $dash_len -le 0 ]; then
-    	local userhost="$(cut_word "$USER")@$(cut_word "$HOST_FULL")"
-    	if [ "$USE_TW" = yes ]; then
-    		local userhost_len=$(echo -n "$userhost" | tw)
-    	else
-    		local userhost_len=${#userhost}
-    	fi
-		prompt_len=$(( $userhost_len + $dir_len + $DATE_LEN + $deco_len + $wc_margin ))
-		dash_len=$(( $TERMWIDTH - $prompt_len ))
+    	userhost="$(cut_word "$USER")@$(cut_word "$HOST_FULL")"
+		userhost_len=$(get_tw "$userhost")
+		eval $dash_len_cmd
     fi
 
     if [ $dash_len -le 0 ]; then
     	local reduce_len=$(( -$dash_len + 1 ))
-    	dir=$(reduce_path "$dir" $reduce_len)
-    	if [ "$USE_TW" = yes ]; then
-    		local dir_len=$(echo -n "$dir" | tw)
-    	else
-    		local dir_len=${#dir}
-    	fi
-		prompt_len=$(( $userhost_len + $dir_len + $DATE_LEN + $deco_len + $wc_margin ))
-		dash_len=$(( $TERMWIDTH - $prompt_len ))
+    	dir="$(reduce_path "$dir" $reduce_len)"
+		local dir_len=$(get_tw "$dir")
+		eval $dash_len_cmd
+    fi
+
+    if [ $dash_len -le 0 -a $gitinfo_len -gt 0 ]; then
+		gitinfo_len=$(get_tw "$(get_gitinfo -s)")
+		eval $dash_len_cmd
+    fi
+
+    if [ $dash_len -le 0 -a $gitinfo_len -gt 0 ]; then
+		gitinfo_len=$(get_tw "$(reduce_word "$(get_gitinfo -s)")")
+		eval $dash_len_cmd
     fi
 
     if [ $dash_len -le 0 ]; then
     	local reduce_len=$(( -$dash_len + 1 ))
-    	dir=$(cut_path "$dir" $reduce_len)
-    	if [ "$USE_TW" = yes ]; then
-    		local dir_len=$(echo -n "$dir" | tw)
-    	else
-    		local dir_len=${#dir}
-    	fi
-		prompt_len=$(( $userhost_len + $dir_len + $DATE_LEN + $deco_len + $wc_margin ))
-		dash_len=$(( $TERMWIDTH - $prompt_len ))
+    	dir="$(cut_path "$dir" $reduce_len)"
+		local dir_len=$(get_tw "$dir")
+		eval $dash_len_cmd
     fi
 
     if [ $dash_len -le 0 ]; then
@@ -236,9 +266,13 @@ function make_prompt_without_xterm () {
         dash_len=1
     fi
 
-    local dash="${DASH_LONG:0:$dash_len}"
+    local dash_str="${DASH_LONG:0:$dash_len}"
+	local userhost_str="$C_BG<$C_USERHOST$userhost$C_BG: "
+	local dir_str="$C_DIR$dir$C_BG>"
+	local gitinfo_str="$(get_gitinfo_str)"
+	local date_str="$C_BG<$C_DATE\D{%T %a}$C_BG>"
 
-    PS1="$C_BG<$C_USERHOST$userhost$C_BG: $C_DIR$dir$C_BG>$dash<$C_DATE\D{%T %a}$C_BG>$C_END\n\\$ "
+    PS1="$userhost_str$dir_str$gitinfo_str$dash_str$date_str$C_END\n\\$ "
 }
 
 make_prompt_init
