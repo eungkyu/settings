@@ -12,8 +12,8 @@ function get_tw() {
 }
 
 function init_gitinfo() {
-	GIT_BRANCH=$(git branch --no-color 2> /dev/null | egrep "^\*" | cut -c3-)
-	GIT_ORIGIN=$(basename $(git remote show -n origin | egrep 'Fetch URL' | cut -c14-) .git)
+	GIT_BRANCH="$(git branch --no-color 2>/dev/null | egrep "^\*" | cut -c3-)"
+	GIT_ORIGIN="$(basename "$(git remote show -n origin 2>/dev/null | egrep 'Fetch URL' | cut -c14-)" .git)"
 }
 
 function get_gitinfo() {
