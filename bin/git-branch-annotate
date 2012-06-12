@@ -1,0 +1,79 @@
+#!/bin/bash
+
+if [ -n "$1" ]; then
+	subcmd="$1"
+	shift
+else
+	subcmd=show
+fi
+
+case "$subcmd" in
+set)
+	if [ -z "$1" ]; then
+		echo "message is required" >&2
+		exit 1
+	fi
+	message="$1"
+	shift
+
+	if [ -n "$1" ]; then
+		branch="$1"
+		shift
+	else
+		branch=$(git branch --no-color 2> /dev/null | egrep "^\*" | cut -c3-)
+	fi
+	;;
+
+show)
+	if [ -n "$1" ]; then
+		branches=("$1")
+		shift
+	else
+		branches=($(git branch --no-color 2> /dev/null | cut -c3-))
+	fi
+	;;
+
+delete)
+	if [ -n "$1" ]; then
+		branch="$1"
+		shift
+	else
+		branch=($(git branch --no-color 2> /dev/null | egrep "^\*" | cut -c3-))
+	fi
+	;;
+esac
+
+case "$subcmd" in
+set)
+	git config "branch-annotate.$branch" "$message"
+	;;
+
+show)
+	maxlen=0
+	for b in "${branches[@]}"; do
+		if [ ${#b} -gt $maxlen ]; then
+			maxlen=${#b}
+		fi
+	done
+
+	echo "# use \"git branch-annotate set <message> [branch]\" to annotate branch"
+	#echo "# use \"git branch-annotate delete <branch>\" to delete branch annotation"
+	#echo "# use \"git branch-annotate delete-all\" to delete all branch annotation"
+	for b in "${branches[@]}"; do
+		printf "%-${maxlen}s " "$b"
+		message=$(git config --get "branch-annotate.$b")
+		if [ -z "$message" ]; then
+			message="(no message)"
+		fi
+		echo "$message"
+	done
+	;;
+
+delete)
+	git config --unset "branch-annotate.$branch"
+	;;
+
+delete-all)
+	git config --remove-section branch-annotate
+	;;
+esac

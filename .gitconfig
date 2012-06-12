@@ -8,6 +8,7 @@
 	br = branch
 	bm = branch --merged
 	bn = branch --no-merged
+	ba = branch-annotate
 	sh = stash
 [color]
 	branch = auto
