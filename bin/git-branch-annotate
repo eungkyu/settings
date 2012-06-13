@@ -43,9 +43,17 @@ delete)
 	;;
 esac
 
+get_key() {
+	echo "branch-annotate.${1//_/-}"
+}
+
+get_section() {
+	echo branch-annotate;
+}
+
 case "$subcmd" in
 set)
-	git config "branch-annotate.$branch" "$message"
+	git config "$(get_key "$branch")" "$message"
 	;;
 
 show)
@@ -61,7 +69,7 @@ show)
 	#echo "# use \"git branch-annotate delete-all\" to delete all branch annotation"
 	for b in "${branches[@]}"; do
 		printf "%-${maxlen}s " "$b"
-		message=$(git config --get "branch-annotate.$b")
+		message=$(git config --get "$(get_key "$b")")
 		if [ -z "$message" ]; then
 			message="(no message)"
 		fi
@@ -70,10 +78,10 @@ show)
 	;;
 
 delete)
-	git config --unset "branch-annotate.$branch"
+	git config --unset "$(get_key "$branch")"
 	;;
 
 delete-all)
-	git config --remove-section branch-annotate
+	git config --remove-section "$(get_section)"
 	;;
 esac
