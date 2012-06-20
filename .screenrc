@@ -11,7 +11,7 @@ escape ^Gg
 	startup_message off
 
 # hardstatus and caption
-	defhstatus "screen  (t) | $USER@H"
+	#defhstatus "screen  (t) | $USER@H"
 	hardstatus off
 	#caption always '%{= KW} %2n %t %{wk} %h %= %{-} %Y-%m-%d %c:%s '
 	caption always '%{= KW} %2n %t %{wk} %h %= %{-}'
@@ -21,14 +21,14 @@ escape ^Gg
 # window title
 	# special xterm hardstatus: use the window title.
 	#termcapinfo xterm*|rxvt*|kterm*|Eterm* 'hs:ts=\E]0;:fs=\007:ds=\E]0;\007'
-	termcapinfo xterm*|rxvt*|kterm*|Eterm* 'hs:ts=\E]0;:fs=\007:ds=\E]0;\007:ti@:te@'
+	#termcapinfo xterm*|rxvt*|kterm*|Eterm* 'hs:ts=\E]0;:fs=\007:ds=\E]0;\007:ti@:te@'
 
 # supporting 256 colors
 	# terminfo and termcap for nice 256 color terminal
 	# allow bold colors - necessary for some reason
 	attrcolor b ".I" 
 	# tell screen how to set colors. AB=background, AF=foreground 
-	termcapinfo xterm-256color* 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm' 
+	#termcapinfo xterm-256color* 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
 	# erase background with current bg color 
 	defbce on
 

@@ -23,10 +23,14 @@ function init_gitinfo() {
 function get_gitinfo() {
 	local option="$1"
 
+    if [ -z "$GIT_BRANCH" ]; then
+        return
+    fi
+
 	if [ "$option" = -s ]; then
 		echo "$GIT_BRANCH"
 	else
-		if [ -n $GIT_ORIGIN ]; then
+		if [ -n "$GIT_ORIGIN" ]; then
 			echo "$GIT_ORIGIN: $GIT_BRANCH"
 		else
 			echo "$GIT_BRANCH"
@@ -175,28 +179,37 @@ function make_prompt_init() {
 	DATE_LEN=$(get_tw "$(date "+%T %a")")
 
 	case $TERM in
-	screen*)
-		PROMPT_COMMAND="make_prompt;screen_cmd;$PROMPT_COMMAND"
-		;;
+    screen*)
+		PROMPT_COMMAND="make_prompt;make_screen_hardstatus"
+        ;;
 	xterm*|cygwin)
-		PROMPT_COMMAND="make_prompt;$PROMPT_COMMAND"
+		PROMPT_COMMAND="make_prompt;make_title"
 		;;
 	*)
-		PROMPT_COMMAND="make_prompt_without_xterm;$PROMPT_COMMAND"
+		PROMPT_COMMAND="make_prompt"
 		;;
 	esac
 }
 
+function make_screen_hardstatus () {
+    local gitinfo="$(get_gitinfo)"
+    if [ "$gitinfo" ]; then
+        echo -ne "\033_$USER@$HOST_FULL: ${PWD/$HOME/~} ($(get_gitinfo))\033\\"
+    else
+        echo -ne "\033_$USER@$HOST_FULL: ${PWD/$HOME/~}\033\\"
+    fi
+}
+
+function make_title () {
+    local gitinfo="$(get_gitinfo)"
+    if [ "$gitinfo" ]; then
+        echo -ne "\033]0;$USER@$HOST_FULL: ${PWD/$HOME/~} ($(get_gitinfo))\007"
+    else
+        echo -ne "\033]0;$USER@$HOST_FULL: ${PWD/$HOME/~}\007"
+    fi
+}
+
 function make_prompt () {
-    echo -ne "\033]0;$USER@$HOST_FULL: ${PWD/$HOME/~} - bash\007"
-    make_prompt_without_xterm
-}
-
-function screen_cmd () {
-	echo -ne "\033k$(get_gitinfo)\033\\";
-}
-
-function make_prompt_without_xterm () {
 	if [ -z "$COLUMNS" ]; then
 		local termwidth=$(tput cols)
 	else
