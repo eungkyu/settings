@@ -43,13 +43,12 @@ alias grep='grep --color=auto'
 alias less='less -r'
 alias vim='vim -p'
 alias g='git'
-alias sgrep='grep-source'
 
 if type git >/dev/null; then
 	alias diff='git diff --no-index'
 fi
 
-function grep-source() {
+function sgrep() {
 	if [ $# -eq 0 ]; then
 		grep -rI
 	elif [ $# -eq 1 ]; then
@@ -57,6 +56,23 @@ function grep-source() {
 	else
 		grep -rI "$@"
 	fi
+}
+
+function ffind() {
+    if [ $# -eq 0 ]; then
+        find . -type f
+        return
+    fi
+
+    cond=(-name "*$1*")
+    shift
+
+    while [ "$1" ]; do
+        cond=("${cond[@]}" -o -name "*$1*")
+        shift
+    done
+    echo find . -type f "(" "${cond[@]}" ")"
+    find . -type f "(" "${cond[@]}" ")"
 }
 
 alias vi='vi-helper'
