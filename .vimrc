@@ -118,5 +118,10 @@ autocmd FileType dosini			set tabstop=8 softtabstop=0 shiftwidth=8 noexpandtab
 " /etc/vimrc 에서 되돌리기
 set nopaste
 
-map Zo A<space>/*{{{*/<ESC>
-map Zc A<space>/*}}}*/<ESC>
+map <Leader>zo A<space>/*{{{*/<ESC>
+map <Leader>zc A<space>/*}}}*/<ESC>
+
+let rc = findfile(".vimrc.local", ",;")
+if rc != ""
+    execute "source " . rc 
+endif
