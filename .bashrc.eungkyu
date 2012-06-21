@@ -55,7 +55,7 @@ if type git >/dev/null; then
 	alias diff='git diff --no-index'
 fi
 
-function sgrep() {
+sgrep () {
 	if [ $# -eq 0 ]; then
 		grep -rI
 	elif [ $# -eq 1 ]; then
@@ -65,7 +65,7 @@ function sgrep() {
 	fi
 }
 
-function ffind() {
+ffind () {
     if [ $# -eq 0 ]; then
         find . -type f
         return
@@ -82,10 +82,10 @@ function ffind() {
     find . -type f "(" "${cond[@]}" ")"
 }
 
-alias vi='vi-helper'
-alias cd='cd-helper'
+alias cd='cd_helper'
+alias vi='vi_helper'
 
-function cd-helper() {
+cd_helper () {
 	if [ $# -eq 0 ]; then
 		\cd
 	elif [ -f "$1" ]; then
@@ -95,7 +95,7 @@ function cd-helper() {
 	fi
 }
 
-function vi-helper() {
+vi_helper () {
 	if [ $# -eq 0 ]; then
 		vim
 	elif [ -d "$1" ]; then

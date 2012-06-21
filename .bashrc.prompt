@@ -2,7 +2,7 @@
 
 shopt -s checkwinsize
 
-function get_tw() {
+get_tw () {
 	local str="$1"
 	if [ "$USE_TW" = yes ]; then
 		echo $(echo -n "$str" | tw)
@@ -11,7 +11,7 @@ function get_tw() {
 	fi
 }
 
-function init_gitinfo() {
+init_gitinfo () {
 	GIT_BRANCH="$(git branch 2>/dev/null | egrep "^\*" | cut -c3-)"
 	GIT_ORIGIN="$(basename "$(git remote show -n origin 2>/dev/null | egrep 'Fetch URL' | cut -c14-)" .git)"
     if [ "$GIT_ORIGIN" = settings ]; then
@@ -20,7 +20,7 @@ function init_gitinfo() {
     fi
 }
 
-function get_gitinfo() {
+get_gitinfo () {
 	local option="$1"
 
     if [ -z "$GIT_BRANCH" ]; then
@@ -38,7 +38,7 @@ function get_gitinfo() {
 	fi
 }
 
-function get_gitinfo_str() {
+get_gitinfo_str () {
 	if [ -n "$GIT_ORIGIN" ]; then
 		echo "$C_BG-<$C_GITINFO2$GIT_ORIGIN$C_BG: $C_GITINFO1$GIT_BRANCH$C_BG>"
 	elif [ -n "$GIT_BRANCH" ]; then
@@ -48,7 +48,7 @@ function get_gitinfo_str() {
 	fi
 }
 
-function reduce_word() {
+reduce_word () {
 	local word="$1"
 	local suffix="${1:1}"
 	local res="${1:0:1}"
@@ -69,7 +69,7 @@ function reduce_word() {
 	fi
 }
 
-function cut_word() {
+cut_word () {
 	local word="$1"
 	local res="${1:0:1}~"
 
@@ -80,7 +80,7 @@ function cut_word() {
 	fi
 }
 
-function reduce_path() {
+reduce_path () {
 	local path=$1
 	local reduce_len=$2
 	local res=""
@@ -101,7 +101,7 @@ function reduce_path() {
 	echo -n "${res%/}"
 }
 
-function cut_word() {
+cut_word () {
 	local word="$1"
 	local res="${1:0:1}~"
 
@@ -112,7 +112,7 @@ function cut_word() {
 	fi
 }
 
-function cut_path() {
+cut_path () {
 	local path=$1
 	local reduce_len=$2
 	local res=""
@@ -133,7 +133,7 @@ function cut_path() {
 	echo -n "${res%/}"
 }
 
-function make_dash_long() {
+make_dash_long () {
 	DASH_LONG="--------------------------------"
 	if [ "$USE_TW" = yes ]; then
 		local dash_long_len=$(echo -n "$DASH_LONG" | tw)
@@ -146,7 +146,7 @@ function make_dash_long() {
 	done
 }
 
-function make_prompt_init() {
+make_prompt_init () {
 	if type tw > /dev/null 2> /dev/null; then
 		USE_TW=yes
 	else
@@ -180,18 +180,18 @@ function make_prompt_init() {
 
 	case $TERM in
     screen*)
-		PROMPT_COMMAND="make_prompt;make_screen_hardstatus"
+		PROMPT_COMMAND="$PROMPT_COMMAND;make_prompt;make_screen_hardstatus"
         ;;
 	xterm*|cygwin)
-		PROMPT_COMMAND="make_prompt;make_title"
+		PROMPT_COMMAND="$PROMPT_COMMAND;make_prompt;make_title"
 		;;
 	*)
-		PROMPT_COMMAND="make_prompt"
+		PROMPT_COMMAND="$PROMPT_COMMAND;make_prompt"
 		;;
 	esac
 }
 
-function make_screen_hardstatus () {
+make_screen_hardstatus () {
     local gitinfo="$(get_gitinfo)"
     if [ "$gitinfo" ]; then
         echo -ne "\033_$USER@$HOST_FULL: ${PWD/$HOME/~} ($(get_gitinfo))\033\\"
@@ -200,7 +200,7 @@ function make_screen_hardstatus () {
     fi
 }
 
-function make_title () {
+make_title () {
     local gitinfo="$(get_gitinfo)"
     if [ "$gitinfo" ]; then
         echo -ne "\033]0;$USER@$HOST_FULL: ${PWD/$HOME/~} ($(get_gitinfo))\007"
@@ -209,7 +209,7 @@ function make_title () {
     fi
 }
 
-function make_prompt () {
+make_prompt () {
 	if [ -z "$COLUMNS" ]; then
 		local termwidth=$(tput cols)
 	else

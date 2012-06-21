@@ -1,4 +1,4 @@
-function use_ssh_agent () {
+use_ssh_agent () {
 	# 이미 ssh-agent가 있을 경우 리턴 (1차)
 	if [ -n "$SSH_AUTH_SOCK" -a -e "$SSH_AUTH_SOCK" ]; then
 		return

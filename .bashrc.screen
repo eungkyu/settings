@@ -1,4 +1,4 @@
-function load_screen () {
+load_screen () {
 	local screen_env="SSH_AUTH_SOCK SSH_CLIENT SSH_CONNECTION SSH_TTY XAUTHORITY DISPLAY"
 	for env in $screen_env; do
 		if [ -n "${!env}" ]; then
@@ -14,13 +14,13 @@ function load_screen () {
 	exec screen -A -x -R
 }
 
-function prompt_command_screen () {
+prompt_command_screen () {
 	if [ -f ~/.screen.env ]; then
 		source ~/.screen.env
 	fi
 }
 
-function use_screen () {
+use_screen () {
 	if ! which screen >/dev/null 2>&1; then
 		return
 	fi
@@ -30,7 +30,7 @@ function use_screen () {
 	case "$TERM" in
 		screen*)
 			in_screen=yes
-			PROMPT_COMMAND="prompt_command_screen;$PROMPT_COMMAND"
+			PROMPT_COMMAND="$PROMPT_COMMAND;prompt_command_screen"
 			;;
 	esac
 
