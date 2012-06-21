@@ -1,6 +1,13 @@
 # interactive shell인 경우에만 진행
 [ "$PS1" ] || return
 
+noop () {
+    echo -n
+}
+
+# reset PROMPT_COMMAND
+PROMPT_COMMAND=noop
+
 # use screen
 if [ -e ~/.bashrc.screen ]; then
 	source ~/.bashrc.screen
