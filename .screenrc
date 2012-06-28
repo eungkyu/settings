@@ -22,6 +22,7 @@ escape ^Gg
 	# special xterm hardstatus: use the window title.
 	#termcapinfo xterm*|rxvt*|kterm*|Eterm* 'hs:ts=\E]0;:fs=\007:ds=\E]0;\007'
 	#termcapinfo xterm*|rxvt*|kterm*|Eterm* 'hs:ts=\E]0;:fs=\007:ds=\E]0;\007:ti@:te@'
+	termcapinfo xterm*|rxvt*|kterm*|Eterm* 'ti@:te@'
 
 # supporting 256 colors
 	# terminfo and termcap for nice 256 color terminal
