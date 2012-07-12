@@ -59,6 +59,9 @@ set hlsearch
 set ignorecase
 set smartcase
 
+set iskeyword-=/
+set iskeyword+=$
+
 let php_sql_query = 1
 syntax on
 
@@ -109,10 +112,9 @@ map <F3> :cp<CR>
 map <F4> :cn<CR>
 
 " FileType Plugins
-au! BufNewFile,BufRead *.nwz,*.php
+au! BufNewFile,BufRead *.php
 autocmd BufRead,BufNewFile *.tpl	set filetype=php
 
-autocmd FileType php			set keywordprg=phpman
 autocmd FileType dosini			set tabstop=8 softtabstop=0 shiftwidth=8 noexpandtab
 
 " /etc/vimrc 에서 되돌리기
