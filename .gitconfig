@@ -8,7 +8,6 @@
 	br = branch
 	bm = branch --merged
 	bn = branch --no-merged
-	ba = branch-annotate
 	sh = stash
 [color]
 	branch = auto
@@ -18,4 +17,4 @@
 [core]
 	pager = less -x5,9
 [branch]
-	autosetuprebase = always
+	autosetuprebase = local
