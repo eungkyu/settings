@@ -52,7 +52,6 @@ set showmode
 
 " mouse
 set ttymouse=xterm2
-set mouse=a
 
 " Searching
 set hlsearch
@@ -60,7 +59,6 @@ set ignorecase
 set smartcase
 
 set iskeyword-=/
-set iskeyword+=$
 
 let php_sql_query = 1
 syntax on
@@ -112,10 +110,11 @@ map <F3> :cp<CR>
 map <F4> :cn<CR>
 
 " FileType Plugins
-au! BufNewFile,BufRead *.php
-autocmd BufRead,BufNewFile *.tpl	set filetype=php
+"au! BufNewFile,BufRead *.php
+autocmd BufRead,BufNewFile *.tpl    set filetype=php
+autocmd FileType php                set iskeyword-=/ iskeyword+=$
 
-autocmd FileType dosini			set tabstop=8 softtabstop=0 shiftwidth=8 noexpandtab
+autocmd FileType dosini             set tabstop=8 softtabstop=0 shiftwidth=8 noexpandtab
 
 " /etc/vimrc 에서 되돌리기
 set nopaste
