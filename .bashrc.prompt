@@ -36,6 +36,11 @@ get_gitinfo () {
         return
     fi
 
+	if [ "$option" = -r ]; then
+		echo "$(reduce_word "$GIT_BRANCH")"
+        return
+    fi
+
 	if [ "$option" = -s ]; then
 		echo "$GIT_BRANCH"
         return
@@ -50,7 +55,7 @@ get_gitinfo () {
 
     if [ -n "$GIT_MERGE" ]; then
         if [ "$GIT_REBASE" = true ]; then
-            op="<=r"
+            op="r=>"
         else
             op="m=>"
         fi
@@ -67,8 +72,12 @@ get_gitinfo_str () {
         return
     fi
 
+	if [ "$option" = -r ]; then
+        echo "$C_BG-<$C_GITINFO1$(reduce_word "$GIT_BRANCH")$C_BG>"
+        return
+    fi
+
 	if [ "$option" = -s ]; then
-		echo "$GIT_BRANCH"
         echo "$C_BG-<$C_GITINFO1$GIT_BRANCH$C_BG>"
         return
     fi
@@ -82,7 +91,7 @@ get_gitinfo_str () {
 
     if [ -n "$GIT_MERGE" ]; then
         if [ "$GIT_REBASE" = true ]; then
-            op="<=r"
+            op="r=>"
         else
             op="m=>"
         fi
@@ -275,6 +284,7 @@ make_prompt () {
 	init_gitinfo
 
 	local gitinfo_len=$(get_tw "$(get_gitinfo)")
+	local gitinfo_str="$(get_gitinfo_str)"
 
 	if [ $gitinfo_len -gt 0 ]; then
 		local deco_len=9
@@ -315,11 +325,20 @@ make_prompt () {
 
     if [ $dash_len -le 0 -a $gitinfo_len -gt 0 ]; then
 		gitinfo_len=$(get_tw "$(get_gitinfo -s)")
+        gitinfo_str="$(get_gitinfo_str -s)"
 		eval $dash_len_cmd
     fi
 
     if [ $dash_len -le 0 -a $gitinfo_len -gt 0 ]; then
-		gitinfo_len=$(get_tw "$(reduce_word "$(get_gitinfo -s)")")
+		gitinfo_len=$(get_tw "$(get_gitinfo -r)")
+        gitinfo_str="$(get_gitinfo_str -r)"
+		eval $dash_len_cmd
+    fi
+
+    if [ $dash_len -le 0 -a $gitinfo_len -gt 0 ]; then
+        deco_len=6
+        gitinfo_len=0
+        gitinfo_str=""
 		eval $dash_len_cmd
     fi
 
@@ -338,7 +357,6 @@ make_prompt () {
     local dash_str="${DASH_LONG:0:$dash_len}"
 	local userhost_str="$C_BG<$C_USERHOST$userhost$C_BG: "
 	local dir_str="$C_DIR$dir$C_BG>"
-	local gitinfo_str="$(get_gitinfo_str)"
 	local date_str="$C_BG<$C_DATE\D{%T %a}$C_BG>"
 
     PS1="$userhost_str$dir_str$gitinfo_str$dash_str$date_str$C_END\n\\$ "
