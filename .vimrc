@@ -9,8 +9,12 @@ set modelines=5
 set encoding=utf-8
 set fileencodings=ucs-bom,utf-8,cp949,euc-kr,latin1
 
-" 까만 배경 화면
-set background=dark
+" 배경 화면 설정
+if $USE_DARK_BACKGROUND == 'yes'
+    set background=dark
+else
+    set background=light
+endif
 
 " BufExplorer 설정
 let mapleader = ","

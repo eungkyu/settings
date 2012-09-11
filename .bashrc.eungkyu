@@ -1,6 +1,20 @@
 # interactive shell인 경우에만 진행
 [ "$PS1" ] || return
 
+# default settings
+USE_DARK_BACKGROUND=yes
+USE_SCREEN=yes
+USE_SSH_AGENT=no
+
+# local settings
+if [ -e ~/.bashrc.local ]; then
+	source ~/.bashrc.local
+fi
+
+export USE_DARK_BACKGROUND
+export USE_SCREEN
+export USE_SSH_AGENT
+
 noop () {
     echo -n
 }

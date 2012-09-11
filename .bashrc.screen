@@ -39,6 +39,6 @@ use_screen () {
 	fi
 }
 
-if [ -z "$NO_SCREEN" ]; then
+if [ "$USE_SCREEN" = yes ]; then
 	use_screen
 fi

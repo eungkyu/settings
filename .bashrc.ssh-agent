@@ -20,6 +20,6 @@ use_ssh_agent () {
 	ssh-add
 }
 
-if [ -n "$USE_SSH_AGENT" ]; then
+if [ "$USE_SSH_AGENT" = yes ]; then
 	use_ssh_agent
 fi
