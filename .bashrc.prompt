@@ -12,12 +12,21 @@ get_tw () {
 }
 
 init_gitinfo () {
-	GIT_BRANCH="$(git branch 2>/dev/null | egrep "^\*" | cut -c3-)"
-	GIT_ORIGIN="$(basename "$(git remote show -n origin 2>/dev/null | egrep 'Fetch URL' | cut -c14-)" .git)"
-    if [ "$GIT_ORIGIN" = settings ]; then
-        GIT_BRANCH=""
-        GIT_ORIGIN=""
+	GIT_BRANCH="$(git symbolic-ref --quiet --short HEAD 2>/dev/null)"
+    if [ -z "$GIT_BRANCH" ]; then
+        unset GIT_BRANCH GIT_REMOTE GIT_REMOTE_NAME GIT_MERGE GIT_REBASE
+        return
     fi
+
+    GIT_REMOTE="$(git config --get branch.master.remote)"
+	GIT_REMOTE_NAME="$(basename "$(git config --get remote."$GIT_REMOTE".url 2>/dev/null)" .git)"
+    if [ "$GIT_REMOTE_NAME" = settings ]; then
+        unset GIT_BRANCH GIT_REMOTE GIT_REMOTE_NAME GIT_MERGE GIT_REBASE
+        return
+    fi
+
+    GIT_MERGE="$(basename "$(git config --get branch."$GIT_BRANCH".merge)")"
+    GIT_REBASE="$(git config --get branch."$GIT_BRANCH".rebase)"
 }
 
 get_gitinfo () {
@@ -29,23 +38,58 @@ get_gitinfo () {
 
 	if [ "$option" = -s ]; then
 		echo "$GIT_BRANCH"
-	else
-		if [ -n "$GIT_ORIGIN" ]; then
-			echo "$GIT_ORIGIN: $GIT_BRANCH"
-		else
-			echo "$GIT_BRANCH"
-		fi
-	fi
+        return
+    fi
+
+    local gitinfo=""
+    if [ -n "$GIT_REMOTE_NAME" ]; then
+        gitinfo="$GIT_REMOTE_NAME: "
+    fi
+
+    gitinfo="$gitinfo$GIT_BRANCH"
+
+    if [ -n "$GIT_MERGE" ]; then
+        if [ "$GIT_REBASE" = true ]; then
+            op="<=r"
+        else
+            op="m=>"
+        fi
+        gitinfo="$gitinfo $op $GIT_MERGE"
+    fi
+
+    echo $gitinfo
 }
 
 get_gitinfo_str () {
-	if [ -n "$GIT_ORIGIN" ]; then
-		echo "$C_BG-<$C_GITINFO2$GIT_ORIGIN$C_BG: $C_GITINFO1$GIT_BRANCH$C_BG>"
-	elif [ -n "$GIT_BRANCH" ]; then
-		echo "$C_BG-<$C_GITINFO1$GIT_BRANCH$C_BG>"
-	else
-		echo ""
-	fi
+	local option="$1"
+
+    if [ -z "$GIT_BRANCH" ]; then
+        return
+    fi
+
+	if [ "$option" = -s ]; then
+		echo "$GIT_BRANCH"
+        echo "$C_BG-<$C_GITINFO1$GIT_BRANCH$C_BG>"
+        return
+    fi
+
+    local gitinfo_str=""
+	if [ -n "$GIT_REMOTE_NAME" ]; then
+        gitinfo_str="$gitinfo_str$C_GITINFO2$GIT_REMOTE_NAME$C_BG: "
+    fi
+
+    gitinfo_str="$gitinfo_str$C_GITINFO1$GIT_BRANCH"
+
+    if [ -n "$GIT_MERGE" ]; then
+        if [ "$GIT_REBASE" = true ]; then
+            op="<=r"
+        else
+            op="m=>"
+        fi
+        gitinfo_str="$gitinfo_str $C_GITINFO3$op $GIT_MERGE"
+    fi
+
+    echo "$C_BG-<$gitinfo_str$C_BG>"
 }
 
 reduce_word () {
@@ -157,7 +201,8 @@ make_prompt_init () {
 
 	C_USERHOST="${b_ansi}0;32m${e_ansi}"
 	C_GITINFO1="${b_ansi}1;35m${e_ansi}"
-	C_GITINFO2="${b_ansi}0;34m${e_ansi}"
+	C_GITINFO2="${b_ansi}1;34m${e_ansi}"
+	C_GITINFO3="${b_ansi}0;35m${e_ansi}"
 	C_DATE="${b_ansi}0;36m${e_ansi}"
 	C_DIR="${b_ansi}0;33m${e_ansi}"
 	C_BG="${b_ansi}30;1m${e_ansi}"
