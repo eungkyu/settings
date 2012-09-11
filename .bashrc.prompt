@@ -53,13 +53,12 @@ get_gitinfo () {
 
     gitinfo="$gitinfo$GIT_BRANCH"
 
-    if [ -n "$GIT_MERGE" ]; then
+    if [ -n "$GIT_MERGE" -a "$GIT_BRANCH" != "$GIT_MERGE" ]; then
         if [ "$GIT_REBASE" = true ]; then
-            op="r=>"
+            gitinfo="$gitinfo ($GIT_MERGE:r)"
         else
-            op="m=>"
+            gitinfo="$gitinfo ($GIT_MERGE:m)"
         fi
-        gitinfo="$gitinfo $op $GIT_MERGE"
     fi
 
     echo $gitinfo
@@ -89,13 +88,12 @@ get_gitinfo_str () {
 
     gitinfo_str="$gitinfo_str$C_GITINFO1$GIT_BRANCH"
 
-    if [ -n "$GIT_MERGE" ]; then
+    if [ -n "$GIT_MERGE" -a "$GIT_BRANCH" != "$GIT_MERGE" ]; then
         if [ "$GIT_REBASE" = true ]; then
-            op="r=>"
+            gitinfo_str="$gitinfo_str $C_GITINFO3($GIT_MERGE:r)"
         else
-            op="m=>"
+            gitinfo_str="$gitinfo_str $C_GITINFO3($GIT_MERGE:m)"
         fi
-        gitinfo_str="$gitinfo_str $C_GITINFO3$op $GIT_MERGE"
     fi
 
     echo "$C_BG-<$gitinfo_str$C_BG>"
