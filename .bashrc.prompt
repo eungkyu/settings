@@ -12,7 +12,7 @@ get_tw () {
 }
 
 init_gitinfo () {
-	GIT_BRANCH="$(git symbolic-ref --quiet --short HEAD 2>/dev/null)"
+	GIT_BRANCH="$(basename "$(git symbolic-ref --quiet HEAD 2>/dev/null)")"
     if [ -z "$GIT_BRANCH" ]; then
         unset GIT_BRANCH GIT_REMOTE GIT_REMOTE_NAME GIT_MERGE GIT_REBASE
         return
@@ -21,7 +21,7 @@ init_gitinfo () {
     GIT_REMOTE="$(git config --get branch.master.remote)"
 	GIT_REMOTE_NAME="$(basename "$(git config --get remote."$GIT_REMOTE".url 2>/dev/null)" .git)"
     if [ "$GIT_REMOTE_NAME" = settings ]; then
-        unset GIT_BRANCH GIT_REMOTE GIT_REMOTE_NAME GIT_MERGE GIT_REBASE
+        unset GIT_REMOTE GIT_REMOTE_NAME GIT_MERGE GIT_REBASE
         return
     fi
 
