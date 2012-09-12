@@ -48,16 +48,21 @@ ulimit -c 0
 
 # default programs
 export VISUAL=vim
-export EDITOR=$VISUAL
+export EDITOR="$VISUAL"
 export GREP_OPTIONS='--color=auto --exclude=cscope.*'
+export CLICOLOR=
 
 alias rm='rm -i'
 alias mv='mv -i'
 alias cp='cp -i'
 
 case "$(uname -s)" in
-	FreeBSD | Darwin	) alias ls='ls -vG' ;;
-	Linux | CYGWIN*		) alias ls='ls -N --color=auto' ;;
+	FreeBSD | Darwin)
+        alias ls='ls -v'
+        ;;
+	Linux | CYGWIN*)
+        alias ls='ls -N --color=auto'
+        ;;
 esac
 
 alias grep='grep --color=auto'
