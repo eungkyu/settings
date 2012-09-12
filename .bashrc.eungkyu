@@ -2,7 +2,7 @@
 [ "$PS1" ] || return
 
 # default settings
-USE_DARK_BACKGROUND=yes
+USE_DARK_BACKGROUND=no
 USE_SCREEN=yes
 USE_SSH_AGENT=no
 
