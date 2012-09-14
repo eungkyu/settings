@@ -3,7 +3,7 @@
 
 # default settings
 USE_DARK_BACKGROUND=no
-USE_SCREEN=yes
+USE_SCREEN=no
 USE_SSH_AGENT=no
 
 # local settings
