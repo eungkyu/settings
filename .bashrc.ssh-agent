@@ -16,10 +16,9 @@ use_ssh_agent () {
 
 	ssh-agent > ~/.ssh-agent.env
 	source ~/.ssh-agent.env >/dev/null
-
-	ssh-add
 }
 
 if [ "$USE_SSH_AGENT" = yes ]; then
 	use_ssh_agent
+	ssh-add >/dev/null 2>&1
 fi
