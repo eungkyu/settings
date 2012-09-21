@@ -15,6 +15,7 @@ call vundle#rc()
 
 " github addon
 Bundle 'gmarik/vundle'
+Bundle 'tpope/vim-fugitive'
 
 " vim-scripts addon
 Bundle 'bufexplorer.zip'
