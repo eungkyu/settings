@@ -1,6 +1,24 @@
 " No Vi-compatible Mode
 set nocompatible
 
+" vundle 설정
+filetype off
+set runtimepath+=~/.vim/bundle/vundle/
+
+if !exists('*vundle#rc')
+    echo "Installing vundle"
+    silent !git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle >/dev/null 2>&1
+    echo "Done"
+endif
+
+call vundle#rc()
+
+" github addon
+Bundle 'gmarik/vundle'
+" vim-scripts addmin
+Bundle 'bufexplorer.zip'
+" git addon
+
 " Enable modeline
 set modeline
 set modelines=5
