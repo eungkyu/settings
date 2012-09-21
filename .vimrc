@@ -5,9 +5,9 @@ set nocompatible
 filetype off
 set runtimepath+=~/.vim/bundle/vundle/
 
-if !exists('*vundle#rc')
-    echo "Installing vundle"
-    silent !git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle >/dev/null 2>&1
+if !isdirectory(expand("~/.vim/bundle/vundle"))
+    echo "Installing vundle\r\n"
+    silent !git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
     echo "Done"
 endif
 
@@ -15,9 +15,12 @@ call vundle#rc()
 
 " github addon
 Bundle 'gmarik/vundle'
-" vim-scripts addmin
+
+" vim-scripts addon
 Bundle 'bufexplorer.zip'
+
 " git addon
+" none
 
 " Enable modeline
 set modeline
