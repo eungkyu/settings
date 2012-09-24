@@ -124,6 +124,11 @@ vi_helper () {
 	fi
 }
 
+# Add android sdk path
+if [ -d "$ANDROID_HOME" ]; then
+    PATH="$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH"
+fi
+
 if [ -e ~/.bashrc.prompt ]; then
 	source ~/.bashrc.prompt
 fi
