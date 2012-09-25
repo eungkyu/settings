@@ -69,6 +69,7 @@ alias grep='grep --color=auto'
 alias less='less -r'
 alias vim='vim -p'
 alias g='git'
+alias ggrep='git grep'
 
 if type git >/dev/null; then
 	alias diff='git diff --no-index'
