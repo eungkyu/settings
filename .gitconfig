@@ -10,6 +10,7 @@
 	diff = auto
 	interactive = auto
 	status = auto
+	grep = auto
 [core]
 	pager = less -x5,9
 [branch]
