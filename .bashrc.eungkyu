@@ -35,6 +35,8 @@ fi
 # git auto-completion
 if [ -e /etc/bash_completion.d/git ]; then
 	source /etc/bash_completion.d/git
+elif [ -e /usr/local/git/contrib/completion/git-completion.bash ]; then
+	source /usr/local/git/contrib/completion/git-completion.bash
 fi
 
 # check the terminal size when bash regains control
