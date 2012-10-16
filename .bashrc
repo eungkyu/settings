@@ -135,3 +135,61 @@ fi
 if [ -e ~/.bashrc.prompt ]; then
 	source ~/.bashrc.prompt
 fi
+
+show_color_table () {
+    printf "   foreground color table over white background\n\n"
+    for c in $(seq 0 255); do
+        if [ $(( $c % 16 )) -eq 0 ]; then
+            printf "\e[48;5;231m"
+        fi
+
+        printf "\e[38;5;%dm%4d" $c $c
+
+        if [ $(( $c % 16 )) -eq 15 ]; then
+            printf "\e[0m\n"
+        fi
+    done
+    printf "\n"
+
+    printf "   foreground color table over black background\n\n"
+    for c in $(seq 0 255); do
+        if [ $(( $c % 16 )) -eq 0 ]; then
+            printf "\e[48;5;0m"
+        fi
+
+        printf "\e[38;5;%dm%4d" $c $c
+
+        if [ $(( $c % 16 )) -eq 15 ]; then
+            printf "\e[0m\n"
+        fi
+    done
+    printf "\n"
+
+    printf "   background color table on black foreground\n\n"
+    for c in $(seq 0 255); do
+        if [ $(( $c % 16 )) -eq 0 ]; then
+            printf "\e[38;5;0"
+        fi
+
+        printf "\e[48;5;%dm%4d" $c $c
+
+        if [ $(( $c % 16 )) -eq 15 ]; then
+            printf "\e[0m\n"
+        fi
+    done
+    printf "\n"
+
+    printf "   background color table on white foreground\n\n"
+    for c in $(seq 0 255); do
+        if [ $(( $c % 16 )) -eq 0 ]; then
+            printf "\e[38;5;231m"
+        fi
+
+        printf "\e[48;5;%dm%4d" $c $c
+
+        if [ $(( $c % 16 )) -eq 15 ]; then
+            printf "\e[0m\n"
+        fi
+    done
+    printf "\e[0m"
+}
