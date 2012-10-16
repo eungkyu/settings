@@ -16,6 +16,7 @@ call vundle#rc()
 " github addon
 Bundle 'gmarik/vundle'
 Bundle 'tpope/vim-fugitive'
+Bundle 'bitc/vim-bad-whitespace'
 
 " vim-scripts addon
 Bundle 'bufexplorer.zip'
