@@ -1,72 +1,68 @@
 # vim:tabstop=4 softtabstop=0 shiftwidth=4:noexpandtab
-## ===========================================================================
-## .screenrc
-## ---------------------------------------------------------------------------
-## @AUTHOR		김동민 <dongmin.kim@gmail.com>
-## @SINCE		2006-10-10
-## ===========================================================================
+
+# customized by Eungkyu Song <eungkyu@gmail.com>
+# original author: 김동민 <dongmin.kim@gmail.com> since	2006-10-10
 
 escape ^Gg
+
 # startup message
-	startup_message off
+startup_message off
 
 # hardstatus and caption
-	#defhstatus "screen  (t) | $USER@H"
-	hardstatus off
-	#caption always '%{= KW} %2n %t %{wk} %h %= %{-} %Y-%m-%d %c:%s '
-	caption always '%{= KW} %2n %t %{wk} %h %= %{-}'
-	windowlist title  '[ #: name%12=] hardstatus'
-	windowlist string '[%2n: %t%12=] %h'
+
+#defhstatus "screen  (t) | $USER@H"
+hardstatus off
+caption always '%{= KW} %2n %t %{wk} %h %= %{-}'
+windowlist title  '[ #: name%12=] hardstatus'
+windowlist string '[%2n: %t%12=] %h'
 
 # window title
-	# special xterm hardstatus: use the window title.
-	#termcapinfo xterm*|rxvt*|kterm*|Eterm* 'hs:ts=\E]0;:fs=\007:ds=\E]0;\007'
-	#termcapinfo xterm*|rxvt*|kterm*|Eterm* 'hs:ts=\E]0;:fs=\007:ds=\E]0;\007:ti@:te@'
-	termcapinfo xterm*|rxvt*|kterm*|Eterm* 'ti@:te@'
+
+# special xterm hardstatus: use the window title.
+termcapinfo xterm*|rxvt*|kterm*|Eterm* 'ti@:te@'
 
 # supporting 256 colors
-	# terminfo and termcap for nice 256 color terminal
-	# allow bold colors - necessary for some reason
-	attrcolor b ".I" 
-	# tell screen how to set colors. AB=background, AF=foreground 
-	#termcapinfo xterm-256color* 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
-	# erase background with current bg color 
-	defbce on
+term screen-256color
+
+# allow bold colors - necessary for some reason
+attrcolor b ".I"
+
+# erase background with current bg color
+defbce on
 
 # hardcopy(screenshot) 를 저장할 디렉토리
-	hardcopydir $HOME/.screen
+hardcopydir $HOME/.screen
 
 # default login
-	#deflogin on
-	shell -${SHELL}
+#deflogin on
+shell -${SHELL}
 
 # default utf-8
-	defutf8 on
-	# screen -U로 띄워야 'utf8 on on' 실행한 것처럼 display도 utf8으로 설정된다.
-	
+defutf8 on
+# screen -U로 띄워야 'utf8 on on' 실행한 것처럼 display도 utf8으로 설정된다.
+
 # default scrollback line size
-	defscrollback 2000
+defscrollback 2000
 
 # visual bell
-	vbell off
+vbell off
 
 # region 간 커서 이동을 위한 key binding
 # → Ctrl-A S 로 region 생성 시 Ctrl-A k, Ctrl-A j 로 상하 region 간 커서 이동
-	bind k	focus up
-	bind j	focus down
+bind k	focus up
+bind j	focus down
 
 # resizing windows
-	bind =	resize =
-	bind +	resize +1
-	bind -	resize -1
-	bind _	resize max
+bind =	resize =
+bind +	resize +1
+bind -	resize -1
+bind _	resize max
 
 # window 선택 화면 보이기
-	bind ' '	windowlist -b
+bind ' '	windowlist -b
 
 # startup windows
-	#screen	-t '$ |main'	0
+#screen	-t '$ |main'	0
 
 # start with window 0
-	select 0
-
+select 0
