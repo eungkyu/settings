@@ -72,27 +72,27 @@ get_gitinfo_str () {
     fi
 
 	if [ "$option" = -r ]; then
-        echo "$C_BG-<$C_GITINFO1$(reduce_word "$GIT_BRANCH")$C_BG>"
+        echo "$C_BG-<$C_GIT$(reduce_word "$GIT_BRANCH")$C_BG>"
         return
     fi
 
 	if [ "$option" = -s ]; then
-        echo "$C_BG-<$C_GITINFO1$GIT_BRANCH$C_BG>"
+        echo "$C_BG-<$C_GIT$GIT_BRANCH$C_BG>"
         return
     fi
 
     local gitinfo_str=""
 	if [ -n "$GIT_REMOTE_NAME" ]; then
-        gitinfo_str="$gitinfo_str$C_GITINFO2$GIT_REMOTE_NAME$C_BG: "
+        gitinfo_str="$gitinfo_str$C_GIT$GIT_REMOTE_NAME$C_BG: "
     fi
 
-    gitinfo_str="$gitinfo_str$C_GITINFO1$GIT_BRANCH"
+    gitinfo_str="$gitinfo_str$C_GIT$GIT_BRANCH"
 
     if [ -n "$GIT_MERGE" -a "$GIT_BRANCH" != "$GIT_MERGE" ]; then
         if [ "$GIT_REBASE" = true ]; then
-            gitinfo_str="$gitinfo_str $C_GITINFO3($GIT_MERGE:r)"
+            gitinfo_str="$gitinfo_str $C_GIT($GIT_MERGE:r)"
         else
-            gitinfo_str="$gitinfo_str $C_GITINFO3($GIT_MERGE:m)"
+            gitinfo_str="$gitinfo_str $C_GIT($GIT_MERGE:m)"
         fi
     fi
 
@@ -203,17 +203,12 @@ make_prompt_init () {
 	else
 		USE_TW=no
 	fi
-	local b_ansi="\[\033["
-	local e_ansi="\]"
-
-	C_USERHOST="${b_ansi}0;32m${e_ansi}"
-	C_GITINFO1="${b_ansi}1;35m${e_ansi}"
-	C_GITINFO2="${b_ansi}1;34m${e_ansi}"
-	C_GITINFO3="${b_ansi}0;35m${e_ansi}"
-	C_DATE="${b_ansi}0;36m${e_ansi}"
-	C_DIR="${b_ansi}0;33m${e_ansi}"
-	C_BG="${b_ansi}30;1m${e_ansi}"
-	C_END="${b_ansi}0;0m${e_ansi}"
+	C_USERHOST="\033[38;5;34m"
+	C_DIR="\033[38;5;100m"
+	C_GIT="\033[38;5;206m"
+	C_DATE="\033[38;5;30m"
+	C_BG="\033[38;5;245m"
+	C_END="\033[0m"
 
 	if [ -z "$COLUMNS" ]; then
 		TERMWIDTH=$(tput cols)
