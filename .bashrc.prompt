@@ -227,7 +227,7 @@ make_prompt_init () {
 
 	case $TERM in
     screen*)
-		PROMPT_COMMAND="$PROMPT_COMMAND;make_prompt;make_screen_hardstatus"
+		PROMPT_COMMAND="$PROMPT_COMMAND;make_prompt;make_title;make_screen_hardstatus"
         ;;
 	xterm*|cygwin)
 		PROMPT_COMMAND="$PROMPT_COMMAND;make_prompt;make_title"
@@ -250,9 +250,9 @@ make_screen_hardstatus () {
 make_title () {
     local gitinfo="$(get_gitinfo)"
     if [ "$gitinfo" ]; then
-        echo -ne "\033]0;$USER@$HOST_FULL: ${PWD/$HOME/~} ($(get_gitinfo))\007"
+        echo -ne "\033]0;$(get_gitinfo) - $HOST_FULL\007"
     else
-        echo -ne "\033]0;$USER@$HOST_FULL: ${PWD/$HOME/~}\007"
+        echo -ne "\033]0;${PWD/$HOME/~} - $HOST_FULL\007"
     fi
 }
 
