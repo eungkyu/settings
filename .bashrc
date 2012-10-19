@@ -32,6 +32,11 @@ if [ -e ~/.bashrc.ssh-agent ]; then
 	source ~/.bashrc.ssh-agent
 fi
 
+# empty title before ssh if in apple terminal
+if [ "$TERM_PROGRAM" = Apple_Terminal ]; then
+    alias ssh='echo -ne "\033]0;\007" && ssh'
+fi
+
 # git auto-completion
 if [ -e /etc/bash_completion.d/git ]; then
 	source /etc/bash_completion.d/git
