@@ -16,9 +16,7 @@ caption always '%{= KW} %2n %t %{wk} %h %= %{-}'
 windowlist title  '[ #: name%12=] hardstatus'
 windowlist string '[%2n: %t%12=] %h'
 
-# window title
-
-# special xterm hardstatus: use the window title.
+# make scrollbar work
 termcapinfo xterm*|rxvt*|kterm*|Eterm* 'ti@:te@'
 
 # supporting 256 colors
