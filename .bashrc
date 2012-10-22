@@ -78,7 +78,7 @@ alias vim='vim -p'
 alias g='git'
 alias ggrep='git grep'
 
-if type git >/dev/null; then
+if type git >/dev/null 2>&1; then
 	alias diff='git diff --no-index'
 fi
 
