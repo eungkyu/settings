@@ -14,3 +14,5 @@
 	pager = less -x5,9
 [branch]
 	autosetuprebase = local
+[push]
+	default = simple
