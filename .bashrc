@@ -137,6 +137,11 @@ if [ -d "$ANDROID_HOME" ]; then
     PATH="$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH"
 fi
 
+# Add /usr/local/git/bin to path first
+if [ -d "/usr/local/git/bin" ]; then
+    PATH="/usr/local/git/bin:$PATH"
+fi
+
 if [ -e ~/.bashrc.prompt ]; then
 	source ~/.bashrc.prompt
 fi
