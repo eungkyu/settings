@@ -5,35 +5,53 @@
 require_work_tree
 cd_to_toplevel
 
-cscope_files () {
-    force="$1"
-    if [ -z "$force" -a -f cscope.files ]; then
-        return
+cscope_files_force () {
+    if [ $# -gt 0 ]; then
+        oldifs="$IFS"
+        IFS='|'
+        pattern='\.('"$*"')$'
+        IFS="$oldifs"
+    else
+        pattern='\.(c|h|java|php|js|py)$'
     fi
 
-    git ls-files | egrep '\.(php|c|h|py)$' | sed -re 's/^/"/' -e 's/$/"/' > cscope.files
+    git ls-files | egrep "$pattern" | sed -re 's/^/"/' -e 's/$/"/' > cscope.files
 }
 
-cscope_build () {
-    force="$1"
-    if [ -z "$force" -a -f cscope.out ]; then
-        return
+cscope_files () {
+    if [ ! -f cscope.files ]; then
+        cscope_files_force $@
     fi
+}
 
+cscope_build_force () {
     cscope -b
 }
 
+cscope_build () {
+    if [ ! -f cscope.out ]; then
+        cscope_build_force
+    fi
+}
+
+cscope_clear () {
+    rm -f cscope.files cscope.out
+}
+
 cmd="$1"
+shift
 
 if [ "$cmd" = files ]; then
-    cscope_files force
+    cscope_files_force $@
 elif [ "$cmd" = build ]; then
-    cscope_build force
+    cscope_build_force
 elif [ "$cmd" = rebuild ]; then
-    cscope_files force
-    cscope_build force
+    cscope_files_force $@
+    cscope_build_force
+elif [ "$cmd" = clear ]; then
+    cscope_clear
 elif [ "$cmd" = vim-cmd ]; then
-    cscope_files
+    cscope_files $@
     cscope_build
 
     echo -n "cscope add cscope.out $PWD"

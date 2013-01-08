@@ -26,6 +26,12 @@ Bundle 'bufexplorer.zip'
 " git addon
 " none
 
+let g:cscope_exts = ''
+let rc = findfile(".vimrc.local", ",;")
+if rc != ""
+    execute "source " . rc
+endif
+
 " Enable modeline
 set modeline
 set modelines=5
@@ -97,21 +103,20 @@ syntax on
 " ~/.vim/plugin/cscope_maps.vim에 추가 설정 있음
 if has("cscope")
     " cscope DB 다시 만들기
-    function! CscopeReload()
+    function! CscopeReload(exts)
         set nocscopeverbose
         cscope kill 0
-        execute system('git cscope vim-cmd')
+        execute system("git cscope vim-cmd " . a:exts)
     endfunction
 
-    command! CscopeReload :call CscopeReload()
-
-    call CscopeReload()
+    command! CscopeReload :call CscopeReload(g:cscope_exts)
+    CscopeReload
 
 	" 명령 결과를 quickfix 형태로
 	set cscopequickfix=s-,t-
 
     set timeoutlen=4000
-    set ttimeout 
+    set ttimeout
     set ttimeoutlen=100
 
 	" cscope 명령 내리기 전에 편집할 기회를 줌
@@ -142,11 +147,6 @@ set nopaste
 
 map <Leader>zo A<space>/*{{{*/<ESC>
 map <Leader>zc A<space>/*}}}*/<ESC>
-
-let rc = findfile(".vimrc.local", ",;")
-if rc != ""
-    execute "source " . rc 
-endif
 
 " silent explorer shortcut
 map <Leader>e :silent! Explore<CR>
