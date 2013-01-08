@@ -1,0 +1,41 @@
+#!/bin/bash
+
+. "$(git --exec-path)/git-sh-setup"
+
+require_work_tree
+cd_to_toplevel
+
+cscope_files () {
+    force="$1"
+    if [ -z "$force" -a -f cscope.files ]; then
+        return
+    fi
+
+    git ls-files | egrep '\.(php|c|h|py)$' | sed -re 's/^/"/' -e 's/$/"/' > cscope.files
+}
+
+cscope_build () {
+    force="$1"
+    if [ -z "$force" -a -f cscope.out ]; then
+        return
+    fi
+
+    cscope -b
+}
+
+cmd="$1"
+
+if [ "$cmd" = files ]; then
+    cscope_files force
+elif [ "$cmd" = build ]; then
+    cscope_build force
+elif [ "$cmd" = rebuild ]; then
+    cscope_files force
+    cscope_build force
+elif [ "$cmd" = vim-cmd ]; then
+    cscope_files
+    cscope_build
+
+    echo -n "cscope add cscope.out $PWD"
+fi
+
