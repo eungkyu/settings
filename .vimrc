@@ -7,7 +7,7 @@ set runtimepath+=~/.vim/bundle/vundle/
 
 if !isdirectory(expand("~/.vim/bundle/vundle"))
     echo "Installing vundle\r\n"
-    silent !git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+    !git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
     echo "Done"
 endif
 
@@ -141,7 +141,7 @@ map <F4> :cn<CR>
 " FileType Plugins
 "au! BufNewFile,BufRead *.php
 autocmd BufRead,BufNewFile *.tpl    set filetype=php
-autocmd FileType php                set iskeyword-=/ iskeyword+=$
+autocmd FileType php                set iskeyword-=/ iskeyword+=$ matchpairs-=<:>
 
 autocmd FileType dosini             set tabstop=8 softtabstop=0 shiftwidth=8 noexpandtab
 
@@ -155,3 +155,6 @@ let rc = findfile(".vimrc.local", ",;")
 if rc != ""
     execute "source " . rc 
 endif
+
+" silent explorer shortcut
+map <Leader>e :silent! Explore<CR>
