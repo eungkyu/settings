@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SUBDIRECTORY_OK=1
+
 . "$(git --exec-path)/git-sh-setup"
 
 require_work_tree
@@ -35,7 +37,7 @@ cscope_build () {
 }
 
 cscope_clear () {
-    rm -f cscope.files cscope.out
+    rm -f cscope.files cscope.out cscope.in.out cscope.po.out
 }
 
 cmd="$1"
@@ -54,6 +56,6 @@ elif [ "$cmd" = vim-cmd ]; then
     cscope_files $@
     cscope_build
 
-    echo -n "cscope add cscope.out $PWD"
+    echo -n "cscope add $PWD/cscope.out $PWD"
 fi
 
