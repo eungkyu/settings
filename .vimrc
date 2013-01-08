@@ -17,6 +17,8 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 Bundle 'tpope/vim-fugitive'
 Bundle 'bitc/vim-bad-whitespace'
+Bundle '2072/PHP-Indenting-for-VIm'
+Bundle 'jelera/vim-javascript-syntax'
 
 " vim-scripts addon
 Bundle 'bufexplorer.zip'
