@@ -53,9 +53,12 @@ elif [ "$cmd" = rebuild ]; then
 elif [ "$cmd" = clear ]; then
     cscope_clear
 elif [ "$cmd" = vim-cmd ]; then
-    cscope_files $@
-    cscope_build
-
-    echo -n "cscope add $PWD/cscope.out $PWD"
+    if [ -f cscope.out ]; then
+        cscope_files $@
+        cscope_build
+        echo -n "cscope add $PWD/cscope.out $PWD"
+    else
+        echo -n "cscope kill 0"
+    fi
 fi
 

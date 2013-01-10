@@ -102,15 +102,22 @@ syntax on
 " 기타 cscope에 유용한 설정
 " ~/.vim/plugin/cscope_maps.vim에 추가 설정 있음
 if has("cscope")
-    " cscope DB 다시 만들기
-    function! CscopeReload(exts)
+    " cscope DB 로드하기
+    function! CscopeLoad(exts)
         set nocscopeverbose
         cscope kill 0
         execute system("git cscope vim-cmd " . a:exts)
     endfunction
 
-    command! CscopeReload :call CscopeReload(g:cscope_exts)
-    CscopeReload
+    " cscope DB 다시 만들기
+    function! CscopeRebuild(exts)
+        execute 'silent !git cscope rebuild ' . a:exts
+        call CscopeLoad(a:exts)
+    endfunction
+
+    command! CscopeLoad :call CscopeLoad(g:cscope_exts)
+    command! CscopeRebuild :call CscopeRebuild(g:cscope_exts)
+    CscopeLoad
 
 	" 명령 결과를 quickfix 형태로
 	set cscopequickfix=s-,t-
@@ -118,6 +125,8 @@ if has("cscope")
     set timeoutlen=4000
     set ttimeout
     set ttimeoutlen=100
+
+    map <F5> :CscopeRebuild<CR>
 
 	" cscope 명령 내리기 전에 편집할 기회를 줌
     nmap <C-\><S-s> :cs find s <C-R>=expand("<cword>")<CR>
