@@ -14,10 +14,10 @@ cscope_files_force () {
         pattern='\.('"$*"')$'
         IFS="$oldifs"
     else
-        pattern='\.(c|h|java|php|js|py)$'
+        pattern='\.(c|h|java|php|js|css|py)$'
     fi
 
-    git ls-files | egrep "$pattern" | sed -re 's/^/"/' -e 's/$/"/' > cscope.files
+    git ls-files -c -o --exclude-standard | egrep "$pattern" | sed -re 's/^/"/' -e 's/$/"/' > cscope.files
 }
 
 cscope_files () {
