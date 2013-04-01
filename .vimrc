@@ -111,7 +111,7 @@ if has("cscope")
 
     " cscope DB 다시 만들기
     function! CscopeRebuild(exts)
-        execute 'silent !git cscope rebuild ' . a:exts
+        execute '!git cscope rebuild ' . a:exts
         call CscopeLoad(a:exts)
     endfunction
 
