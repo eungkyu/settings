@@ -72,9 +72,6 @@ if [ -n "$1" ]; then
     target="$1"
 fi
 
-abssrc="$(absdir "$src")"
-abstarget="$(absdir "$target")"
-
 read -p "Do you want to install settings to \`$target'? (y/N) " answer
 
 if [ "$answer" != 'y' ]; then
@@ -82,26 +79,24 @@ if [ "$answer" != 'y' ]; then
     exit 2
 fi
 
-base="$(relpath "$abstarget" "$abssrc/dotfiles")"
-for f in $(find "$abssrc/dotfiles" -type f); do
-    file="$(basename $f)"
-    if [ -e "$target/$file" -a "$force" != y ]; then
-        echo "$target/$file already exists, try with -f to overwrite." >&2
-        exit 3
-    fi
+install_ln() {
+    local src="$1"
+    local target="$2"
+    local abssrc="$(absdir "$src")"
+    local abstarget="$(absdir "$target")"
 
-    ln -sf "$base/$file" "$target/"
-    echo "dotfiles/$file is installed to $target"
-done
+    local base="$(relpath "$abstarget" "$abssrc")"
+    for f in $(find "$abssrc" -type f); do
+        local file="$(basename $f)"
+        if [ -e "$target/$file" -a "$force" != y ]; then
+            echo "$target/$file already exists, try with -f to overwrite." >&2
+            exit 3
+        fi
 
-base="$(relpath "$abstarget/bin" "$abssrc/bin")"
-for f in $(find "$abssrc/bin" -type f); do
-    file="$(basename $f)"
-    if [ -e "$target/$file" -a "$force" != y ]; then
-        echo "$target/$file already exists, try with -f to overwrite." >&2
-        exit 3
-    fi
+        ln -sf "$base/$file" "$target/"
+        echo "$src/$file is installed to $target"
+    done
+}
 
-    ln -sf "$base/$file" "$target/bin/"
-    echo "bin/$file is installed to $target/bin"
-done
+install_ln "$src/dotfiles" "$target"
+install_ln "$src/bin" "$target/bin"
