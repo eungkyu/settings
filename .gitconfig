@@ -1,18 +1,16 @@
 [include]
     path = .gitconfig.local
 [alias]
-	st = status
-	co = checkout
-	br = branch
+    st = status
+    co = checkout
+    br = branch
 [color]
-	branch = auto
-	diff = auto
-	interactive = auto
-	status = auto
-	grep = auto
+    branch = auto
+    diff = auto
+    interactive = auto
+    status = auto
+    grep = auto
 [core]
-	pager = less -x5,9
+    pager = less -x5,9
 [branch]
-	autosetuprebase = local
-[push]
-	default = simple
+    autosetuprebase = local
