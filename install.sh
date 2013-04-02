@@ -1,18 +1,18 @@
 #!/bin/bash
 
 absdir() {
-    dir="$1"
+    local dir="$1"
     (cd "$dir" && echo "$(pwd -P)")
 }
 
 relpath() {
     # both $1 and $2 are absolute paths beginning with /
-    # returns relative path to $2/$target from $1/$source
-    source="$1"
-    target="$2"
+    # returns relative path to $2/$target from $1/$src
+    local src="$1"
+    local target="$2"
 
-    common_part="$source" # for now
-    result="" # for now
+    local common_part="$src" # for now
+    local result="" # for now
 
     while [ "${target#$common_part}" = "$target" ]; do
         # no match, means that candidate common part is not correct
