@@ -12,8 +12,8 @@ get_tw () {
 }
 
 init_gitinfo () {
-    if [ "$(git rev-parse --is-inside-work-tree)" != true ]; then
-        unset GIT_BRANCH GIT_REMOTE GIT_REMOTE_NAME GIT_MERGE GIT_REBASE
+    if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" != true ]; then
+        unset GIT_BRANCH GIT_REMOTE_NAME GIT_MERGE GIT_REBASE
         return
     fi
 
@@ -22,12 +22,8 @@ init_gitinfo () {
         GIT_BRANCH="($(git rev-parse --short HEAD))"
     fi
 
-    GIT_REMOTE="$(git config --get branch.master.remote)"
-	GIT_REMOTE_NAME="$(basename "$(git config --get remote."$GIT_REMOTE".url 2>/dev/null)" .git)"
-    if [ "$GIT_REMOTE_NAME" = settings ]; then
-        unset GIT_BRANCH GIT_REMOTE GIT_REMOTE_NAME GIT_MERGE GIT_REBASE
-        return
-    fi
+    local remote="$(git config --get branch.master.remote)"
+	GIT_REMOTE_NAME="$(basename "$(git config --get remote."$remote".url 2>/dev/null)" .git)"
 
     GIT_MERGE="$(basename "$(git config --get branch."$GIT_BRANCH".merge)")"
     GIT_REBASE="$(git config --get branch."$GIT_BRANCH".rebase)"

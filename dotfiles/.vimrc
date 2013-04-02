@@ -19,6 +19,7 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'bitc/vim-bad-whitespace'
 Bundle '2072/PHP-Indenting-for-VIm'
 Bundle 'jelera/vim-javascript-syntax'
+Bundle 'chazy/cscope_maps'
 
 " vim-scripts addon
 Bundle 'bufexplorer.zip'
