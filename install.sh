@@ -86,6 +86,7 @@ install_ln() {
     local abstarget="$(absdir "$target")"
 
     local base="$(relpath "$abstarget" "$abssrc")"
+    mkdir -p "$target"
     for f in $(find "$abssrc" -type f); do
         local file="$(basename $f)"
         if [ -e "$target/$file" -a "$force" != y ]; then
