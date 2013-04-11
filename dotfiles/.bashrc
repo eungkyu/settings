@@ -74,6 +74,7 @@ esac
 
 alias grep='grep --color=auto'
 alias less='less -r'
+alias vi='vim'
 alias vim='vim -p'
 alias g='git'
 alias ggrep='git grep'
@@ -116,7 +117,7 @@ cd_helper () {
 	if [ $# -eq 0 ]; then
 		\cd
 	elif [ -f "$1" ]; then
-		vim -p "$@"
+		\vim -p "$@"
 	else
 		\cd "$@"
 	fi
@@ -124,11 +125,11 @@ cd_helper () {
 
 vi_helper () {
 	if [ $# -eq 0 ]; then
-		vim
+		\vim
 	elif [ -d "$1" ]; then
 		\cd "$@"
 	else
-		vim -p "$@"
+		\vim -p "$@"
 	fi
 }
 
