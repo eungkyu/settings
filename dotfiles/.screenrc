@@ -42,8 +42,9 @@ defutf8 on
 # default scrollback line size
 defscrollback 2000
 
-# visual bell
+# bell
 vbell off
+bell_msg ""
 
 # region 간 커서 이동을 위한 key binding
 # → Ctrl-A S 로 region 생성 시 Ctrl-A k, Ctrl-A j 로 상하 region 간 커서 이동
