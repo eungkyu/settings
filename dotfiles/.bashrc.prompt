@@ -25,8 +25,11 @@ init_gitinfo () {
     local remote="$(git config --get branch.master.remote)"
 	GIT_REMOTE_NAME="$(basename "$(git config --get remote."$remote".url 2>/dev/null)" .git)"
 
-    GIT_MERGE="$(basename "$(git config --get branch."$GIT_BRANCH".merge)")"
-    GIT_REBASE="$(git config --get branch."$GIT_BRANCH".rebase)"
+    local merge="$(git config --get branch."$GIT_BRANCH".merge)"
+    GIT_MERGE="${merge#refs/heads/}"
+
+    local rebase="$(git config --get branch."$GIT_BRANCH".rebase)"
+    GIT_REBASE="${rebase#refs/heads/}"
 }
 
 get_gitinfo () {
