@@ -79,6 +79,30 @@ if [ "$answer" != 'y' ]; then
     exit 2
 fi
 
+check_ln() {
+    local src="$1"
+    local target="$2"
+    local abssrc="$(absdir "$src")"
+    local abstarget="$(absdir "$target")"
+
+    local base="$(relpath "$abstarget" "$abssrc")"
+    mkdir -p "$target"
+    for f in $(find "$abssrc" -type f); do
+        local file="$(basename $f)"
+        if [ -L "$target/$file" ]; then
+            local link="$(readlink "$target/$file")"
+            if [ "$link" = "$link" ]; then
+                continue
+            fi
+        fi
+
+        if [ -e "$target/$file" -a "$force" != y ]; then
+            echo "$target/$file already exists, try with -f to overwrite." >&2
+            exit 3
+        fi
+    done
+}
+
 install_ln() {
     local src="$1"
     local target="$2"
@@ -89,15 +113,13 @@ install_ln() {
     mkdir -p "$target"
     for f in $(find "$abssrc" -type f); do
         local file="$(basename $f)"
-        if [ -e "$target/$file" -a "$force" != y ]; then
-            echo "$target/$file already exists, try with -f to overwrite." >&2
-            exit 3
-        fi
-
         ln -sf "$base/$file" "$target/"
         echo "$src/$file is installed to $target"
     done
 }
+
+check_ln "$src/dotfiles" "$target"
+check_ln "$src/bin" "$target/bin"
 
 install_ln "$src/dotfiles" "$target"
 install_ln "$src/bin" "$target/bin"
