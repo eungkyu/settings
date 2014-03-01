@@ -82,11 +82,13 @@ fi
 check_ln() {
     local src="$1"
     local target="$2"
+
+    mkdir -p "$target"
+
     local abssrc="$(absdir "$src")"
     local abstarget="$(absdir "$target")"
 
     local base="$(relpath "$abstarget" "$abssrc")"
-    mkdir -p "$target"
     for f in $(find "$abssrc" -type f); do
         local file="$(basename $f)"
         if [ -L "$target/$file" ]; then
@@ -106,11 +108,13 @@ check_ln() {
 install_ln() {
     local src="$1"
     local target="$2"
+
+    mkdir -p "$target"
+
     local abssrc="$(absdir "$src")"
     local abstarget="$(absdir "$target")"
 
     local base="$(relpath "$abstarget" "$abssrc")"
-    mkdir -p "$target"
     for f in $(find "$abssrc" -type f); do
         local file="$(basename $f)"
         ln -sf "$base/$file" "$target/"
