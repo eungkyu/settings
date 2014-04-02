@@ -47,17 +47,20 @@ relpath() {
 }
 
 usage() {
-    echo "Usage: $0 [-f] [target]" >&2
+    echo "Usage: $0 [-f] [-c] [target]" >&2
     exit 1
 }
 
 src="$(dirname "$0")"
-force=
+force=n
+copy=n
 target="$HOME"
 
-while getopts f opt; do
+while getopts fc opt; do
     if [ "$opt" = f ]; then
         force=y
+    elif [ "$opt" = c ]; then
+        copy=y
     else
         usage
     fi
@@ -79,6 +82,14 @@ if [ "$answer" != 'y' ]; then
     exit 2
 fi
 
+check() {
+    if [ "$copy" == n ]; then
+        check_ln "$@"
+    else
+        check_cp "$@"
+    fi
+}
+
 check_ln() {
     local src="$1"
     local target="$2"
@@ -90,7 +101,7 @@ check_ln() {
 
     local base="$(relpath "$abstarget" "$abssrc")"
     for f in $(find "$abssrc" -type f); do
-        local file="$(basename $f)"
+        local file="$(basename "$f")"
         if [ -L "$target/$file" ]; then
             local link="$(readlink "$target/$file")"
             if [ "$link" = "$link" ]; then
@@ -98,11 +109,34 @@ check_ln() {
             fi
         fi
 
-        if [ -e "$target/$file" -a "$force" != y ]; then
+        if [ -e "$target/$file" -a "$force" == n ]; then
             echo "$target/$file already exists, try with -f to overwrite." >&2
             exit 3
         fi
     done
+}
+
+check_cp() {
+    local src="$1"
+    local target="$2"
+
+    mkdir -p "$target"
+
+    for f in $(find "$src" -type f); do
+        local file="$(basename "$f")"
+        if [ -e "$target/$file" -a "$force" == n ]; then
+            echo "$target/$file already exists, try with -f to overwrite." >&2
+            exit 3
+        fi
+    done
+}
+
+install() {
+    if [ "$copy" == n ]; then
+        install_ln "$@"
+    else
+        install_cp "$@"
+    fi
 }
 
 install_ln() {
@@ -116,14 +150,28 @@ install_ln() {
 
     local base="$(relpath "$abstarget" "$abssrc")"
     for f in $(find "$abssrc" -type f); do
-        local file="$(basename $f)"
+        local file="$(basename "$f")"
         ln -sf "$base/$file" "$target/"
         echo "$src/$file is installed to $target"
     done
 }
 
-check_ln "$src/dotfiles" "$target"
-check_ln "$src/bin" "$target/bin"
+install_cp() {
+    local src="$1"
+    local target="$2"
 
-install_ln "$src/dotfiles" "$target"
-install_ln "$src/bin" "$target/bin"
+    mkdir -p "$target"
+
+    for f in $(find "$src" -type f); do
+        local file="$(basename "$f")"
+        rm -f "$target/$file"
+        cp "$f" "$target/"
+        echo "$f is installed to $target"
+    done
+}
+
+check "$src/dotfiles" "$target"
+check "$src/bin" "$target/bin"
+
+install "$src/dotfiles" "$target"
+install "$src/bin" "$target/bin"
