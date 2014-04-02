@@ -1,6 +1,10 @@
 # interactive shell인 경우에만 진행
 [ "$PS1" ] || return
 
+if [ "$(uname -o)" = Cygwin ]; then
+    cmd /c chcp 65001 > /dev/null
+fi
+
 # default settings
 USE_DARK_BACKGROUND=no
 USE_SCREEN=no

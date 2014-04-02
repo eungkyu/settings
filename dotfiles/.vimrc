@@ -39,6 +39,11 @@ set modelines=5
 
 " Character Encoding
 set encoding=utf-8
+if has("gui_win32")
+    set encoding=cp949
+    set fileencoding=utf-8
+    set termencoding=utf-8
+endif
 set fileencodings=ucs-bom,utf-8,cp949,euc-kr,latin1
 
 " 배경 화면 설정
@@ -58,6 +63,10 @@ set autoread
 " 현재 디렉토리가 더럽혀지지 않도록
 set directory-=.
 set backupdir-=.
+if has("win32")
+    set directory=$USERPROFILE/AppData/Local/Temp
+    set backupdir=$USERPROFILE/AppData/Local/Temp
+endif
 
 " 현재 디렉토리의 .vimrc 로드
 set secure
