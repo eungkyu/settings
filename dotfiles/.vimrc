@@ -22,7 +22,7 @@ Bundle 'jelera/vim-javascript-syntax'
 Bundle 'chazy/cscope_maps'
 
 " vim-scripts addon
-Bundle 'bufexplorer.zip'
+Bundle 'jlanzarotta/bufexplorer'
 
 " git addon
 " none
@@ -153,6 +153,8 @@ endif
 map <F2> :cc<CR>
 map <F3> :cp<CR>
 map <F4> :cn<CR>
+
+filetype plugin on
 
 " FileType Plugins
 "au! BufNewFile,BufRead *.php
