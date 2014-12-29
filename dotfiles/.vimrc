@@ -39,10 +39,18 @@ set modelines=5
 
 " Character Encoding
 set encoding=utf-8
+if has("gui")
+    set lines=60
+    set columns=120
+endif
+
 if has("gui_win32")
     set encoding=cp949
     set fileencoding=utf-8
     set termencoding=utf-8
+    set guifont=Consolas:h11:cANSI
+    set guifontwide=NanumGothicCoding:h11:cHANGEUL
+    language message C
 endif
 set fileencodings=ucs-bom,utf-8,cp949,euc-kr,latin1
 
