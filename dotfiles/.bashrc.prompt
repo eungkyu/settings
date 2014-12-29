@@ -201,17 +201,30 @@ make_dash_long () {
 }
 
 make_prompt_init () {
-	if type tw > /dev/null 2> /dev/null; then
-		USE_TW=yes
-	else
-		USE_TW=no
-	fi
 	C_USERHOST="\033[38;5;34m"
 	C_DIR="\033[38;5;100m"
 	C_GIT="\033[38;5;206m"
 	C_DATE="\033[38;5;30m"
 	C_BG="\033[38;5;245m"
 	C_END="\033[0m"
+
+    case "$(uname -s)" in
+        MINGW*)
+            local gitinfo_str=""
+            local dash_str="-"
+            local userhost_str="$C_BG<\u$C_BG: "
+            local dir_str="$C_DIR\w$C_BG>"
+            local date_str="$C_BG<$C_DATE\D{%H:%M:%S %a}$C_BG>"
+            PS1="$userhost_str$dir_str$gitinfo_str$dash_str$date_str$C_END\n\\$ "
+            return
+            ;;
+    esac
+
+	if type tw > /dev/null 2> /dev/null; then
+		USE_TW=yes
+	else
+		USE_TW=no
+	fi
 
 	if [ -z "$COLUMNS" ]; then
 		TERMWIDTH=$(tput cols)
