@@ -174,6 +174,9 @@ autocmd FileType dosini             set tabstop=8 softtabstop=0 shiftwidth=8 noe
 " /etc/vimrc 에서 되돌리기
 set nopaste
 
+" auto reload changes in outside
+set autoread
+
 map <Leader>zo A<space>/*{{{*/<ESC>
 map <Leader>zc A<space>/*}}}*/<ESC>
 
