@@ -183,6 +183,9 @@ map <Leader>zc A<space>/*}}}*/<ESC>
 " silent explorer shortcut
 map <Leader>e :silent! Explore<CR>
 
+" save as root
+cmap w!! w !sudo tee %
+
 if filereadable(expand("~/.vimrc.local"))
     source ~/.vimrc.local
 endif
