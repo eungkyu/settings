@@ -2,7 +2,7 @@ load_screen () {
 	local screen_env="SSH_AUTH_SOCK SSH_CLIENT SSH_CONNECTION SSH_TTY XAUTHORITY DISPLAY USE_DARK_BACKGROUND"
 	for env in $screen_env; do
 		if [ -n "${!env}" ]; then
-			screen -A -x -R -X setenv $env "${!env}" > /dev/null
+			screen -U -A -x -R -X setenv $env "${!env}" > /dev/null
 		fi
 	done
 
@@ -11,7 +11,7 @@ load_screen () {
 			echo "export $env=\"${!env}\""
 		fi
 	done > .screen.env
-	exec screen -A -x -R
+	exec screen -U -A -x -R
 }
 
 prompt_command_screen () {
